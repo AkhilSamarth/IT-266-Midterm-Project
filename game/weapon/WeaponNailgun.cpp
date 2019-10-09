@@ -323,12 +323,13 @@ void rvWeaponNailgun::Think ( void ) {
 		return;
 	}
 
-	// If the zoom button isnt down then dont update the lock
-	if ( !wsfl.zoom || IsReloading ( ) || IsHolstered ( ) ) {
+	// don't worry about whether or not this is zoomed in
+	if (IsReloading ( ) || IsHolstered ( )) {
 		CancelGuide ( );
 		return;
 	}
 
+	/* Okay to have multiple targets
 	// Dont update the target if the current target is still alive, unhidden and we have already locked
 	if ( guideEnt && guideEnt->health > 0 && !guideEnt->IsHidden() && guideLocked ) {
 		float	range;
@@ -340,6 +341,7 @@ void rvWeaponNailgun::Think ( void ) {
 			return;
 		}
 	}
+	*/
 
 	// Cast a ray out to the lock range
 // RAVEN BEGIN
