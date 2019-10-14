@@ -555,6 +555,14 @@ void Cmd_Give_f( const idCmdArgs &args ) {
 }
 // RITUAL END
 
+// this is a test of the command system
+void Cmd_TestCmd_f(const idCmdArgs& args) {
+	// print out given args
+	for (int i = 0; i < args.Argc(); i++) {
+		gameLocal.Printf("Arg %d: %s\n", i, args.Argv(i));
+	}
+}
+
 /*
 ==================
 Cmd_CenterView_f
@@ -3047,6 +3055,9 @@ so it can perform tab completion
 =================
 */
 void idGameLocal::InitConsoleCommands( void ) {
+	// custom test command
+	cmdSystem->AddCommand("printArgs", Cmd_TestCmd_f, CMD_FL_GAME, "test command: prints all args given to this cmd");
+
 // RAVEN BEGIN
 // jscott: typeinfo gone - didn't work, it was unfinished
 //	cmdSystem->AddCommand( "listTypeInfo",			ListTypeInfo_f,				CMD_FL_GAME,				"list type info" );
