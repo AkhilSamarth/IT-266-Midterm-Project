@@ -590,7 +590,7 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 
 	if ( spawnArgs.GetBool( "inv_carry" ) ) {
 		return player->GiveInventoryItem( &spawnArgs );
-	} 
+	}
 	
 	// Handle the special ammo pickup that gives ammo for the weapon the player currently has
 	if ( spawnArgs.GetBool( "item_currentWeaponAmmo" ) ) {
@@ -602,6 +602,35 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 		}
 		return false;
 	} 
+
+	// custom powerups
+	switch (spawnArgs.GetInt("inv_powerup")) {
+	case 1:
+		// jump boost
+		gameLocal.Printf("Jump picked up!");
+		return true;
+		break;
+	case 2:
+		// speed boost
+		gameLocal.Printf("Speed picked up!");
+		return true;
+		break;
+	case 3:
+		// more damage done (strength)
+		gameLocal.Printf("Strength picked up!");
+		return true;
+		break;
+	case 4:
+		// less damage taken (shield)
+		gameLocal.Printf("Shield picked up!");
+		return true;
+		break;
+	case 5:
+		// no ammo used
+		gameLocal.Printf("Ammo power picked up!");
+		return true;
+		break;
+	}
 
 	return player->GiveItem( this );
 }
