@@ -1105,6 +1105,7 @@ idPlayer::idPlayer() {
 	// vars for mod
 	powerUpTimer = 0;
 	jumpHeight = pm_jumpheight.GetFloat();
+	isSpeedActive = false;
 
 	weapon					= NULL;
 
@@ -8762,6 +8763,9 @@ void idPlayer::AdjustSpeed( void ) {
 		speed *= 0.33f;
 	}
 
+	// if the speed powerup is active, increase speed
+	speed *= isSpeedActive ? 2 : 1;
+
 	physicsObj.SetSpeed( speed, pm_crouchspeed.GetFloat() );
 }
 
@@ -9305,6 +9309,11 @@ bool idPlayer::givePowerSpeed() {
 	}
 
 	powerUpTimer = gameLocal.time;
+	
+	// set boolean for speed powerup and adjust speed
+	isSpeedActive = true;
+	AdjustSpeed();
+	
 	gameLocal.Printf("Speed started\n");
 	return true;
 }
@@ -9349,6 +9358,10 @@ void idPlayer::clearPowers() {
 
 	// reset jump
 	jumpHeight = pm_jumpheight.GetFloat();
+
+	// reset speed
+	isSpeedActive = false;
+	AdjustSpeed();
 
 	gameLocal.Printf("Cleared powers.\n");
 }
