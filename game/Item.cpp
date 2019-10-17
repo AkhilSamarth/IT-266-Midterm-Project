@@ -607,29 +607,19 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 	switch (spawnArgs.GetInt("inv_powerup")) {
 	case 1:
 		// jump boost
-		gameLocal.Printf("Jump picked up!");
-		return true;
-		break;
+		return player->givePowerJump();
 	case 2:
 		// speed boost
-		gameLocal.Printf("Speed picked up!");
-		return true;
-		break;
+		return player->givePowerSpeed();
 	case 3:
 		// more damage done (strength)
-		gameLocal.Printf("Strength picked up!");
-		return true;
-		break;
+		return player->givePowerStrength();
 	case 4:
 		// less damage taken (shield)
-		gameLocal.Printf("Shield picked up!");
-		return true;
-		break;
+		return player->givePowerShield();
 	case 5:
 		// no ammo used
-		gameLocal.Printf("Ammo power picked up!");
-		return true;
-		break;
+		return player->givePowerAmmo();
 	}
 
 	return player->GiveItem( this );

@@ -1102,6 +1102,8 @@ idPlayer::idPlayer() {
 	lastHitTime				= 0;
 	lastSavingThrowTime		= 0;
 
+	powerUpTimer = 0;
+
 	weapon					= NULL;
 
 	hud						= NULL;
@@ -9275,6 +9277,72 @@ void idPlayer::LoadDeferredModel( void ) {
 	}
 }
 
+// how much time power up should be active for in seconds
+const int powerUpActiveTime = 5;
+
+// methods for giving the player power ups
+bool idPlayer::givePowerJump() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+	gameLocal.Printf("Jump started\n");
+	return true;
+}
+
+bool idPlayer::givePowerSpeed() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+	gameLocal.Printf("Speed started\n");
+	return true;
+}
+
+bool idPlayer::givePowerStrength() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+	gameLocal.Printf("Strength started\n");
+	return true;
+}
+
+bool idPlayer::givePowerShield() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+	gameLocal.Printf("Shield started\n");
+	return true;
+}
+
+bool idPlayer::givePowerAmmo() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+	gameLocal.Printf("Ammo started\n");
+	return true;
+}
+
+// generic method to clear power ups
+// sets all power up changes to 0
+void idPlayer::clearPowers() {
+	powerUpTimer = 0;
+	gameLocal.Printf("Cleared powers.\n");
+}
+
 /*
 ==============
 idPlayer::Think
@@ -9283,6 +9351,12 @@ Called every tic for each player
 ==============
 */
 void idPlayer::Think( void ) {
+
+	// if powerup active, check timer to see if 20 sec have passed
+	if (powerUpTimer && gameLocal.time - powerUpTimer > powerUpActiveTime * 1000) {
+		clearPowers();
+	}
+
 	renderEntity_t *headRenderEnt;
  
 	if ( talkingNPC ) {
