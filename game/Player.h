@@ -305,6 +305,7 @@ public:
 	int						lastSavingThrowTime;	// for the "free miss" effect
 
 	int						powerUpTimer;		// timer for powerups for custom mod
+	float					jumpHeight;			// float to keep track of jumpheight without losing original
 
 	struct playerFlags_s {
 		bool		forward			:1;

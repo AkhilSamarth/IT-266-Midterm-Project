@@ -1102,7 +1102,9 @@ idPlayer::idPlayer() {
 	lastHitTime				= 0;
 	lastSavingThrowTime		= 0;
 
+	// vars for mod
 	powerUpTimer = 0;
+	jumpHeight = pm_jumpheight.GetFloat();
 
 	weapon					= NULL;
 
@@ -8967,7 +8969,7 @@ void idPlayer::Move( void ) {
 
 	// set physics variables
 	physicsObj.SetMaxStepHeight( pm_stepsize.GetFloat() );
-	physicsObj.SetMaxJumpHeight( pm_jumpheight.GetFloat() );
+	physicsObj.SetMaxJumpHeight(jumpHeight);
 
 	if ( noclip ) {
 		physicsObj.SetContents( 0 );
@@ -9288,6 +9290,10 @@ bool idPlayer::givePowerJump() {
 	}
 
 	powerUpTimer = gameLocal.time;
+
+	// set jump height to twice the normal
+	jumpHeight = pm_jumpheight.GetFloat() * 2;
+
 	gameLocal.Printf("Jump started\n");
 	return true;
 }
@@ -9340,6 +9346,10 @@ bool idPlayer::givePowerAmmo() {
 // sets all power up changes to 0
 void idPlayer::clearPowers() {
 	powerUpTimer = 0;
+
+	// reset jump
+	jumpHeight = pm_jumpheight.GetFloat();
+
 	gameLocal.Printf("Cleared powers.\n");
 }
 
