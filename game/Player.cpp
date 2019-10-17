@@ -1106,6 +1106,7 @@ idPlayer::idPlayer() {
 	powerUpTimer = 0;
 	jumpHeight = pm_jumpheight.GetFloat();
 	isSpeedActive = false;
+	isAmmoActive = false;
 
 	weapon					= NULL;
 
@@ -9347,6 +9348,10 @@ bool idPlayer::givePowerAmmo() {
 	}
 
 	powerUpTimer = gameLocal.time;
+
+	// set ammo powerup boolean
+	isAmmoActive = true;
+
 	gameLocal.Printf("Ammo started\n");
 	return true;
 }
@@ -9362,6 +9367,9 @@ void idPlayer::clearPowers() {
 	// reset speed
 	isSpeedActive = false;
 	AdjustSpeed();
+
+	// reset ammo
+	isAmmoActive = false;
 
 	gameLocal.Printf("Cleared powers.\n");
 }

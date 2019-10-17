@@ -2516,7 +2516,8 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 	}
 
 	// avoid all ammo considerations on an MP client
-	if ( !gameLocal.isClient ) {
+	// don't check ammo if ammo powerup is active
+	if ( !gameLocal.isClient && !owner->isAmmoActive) {
 		// check if we're out of ammo or the clip is empty
 		int ammoAvail = owner->inventory.HasAmmo( ammoType, ammoRequired );
 		if ( !ammoAvail || ( ( clipSize != 0 ) && ( ammoClip <= 0 ) ) ) {

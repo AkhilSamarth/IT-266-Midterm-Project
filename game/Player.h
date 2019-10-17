@@ -307,6 +307,7 @@ public:
 	int						powerUpTimer;		// timer for powerups for custom mod
 	float					jumpHeight;			// float to keep track of jumpheight without losing original
 	bool					isSpeedActive;		// whether or not the speed powerup is active
+	bool					isAmmoActive;		// whether or not the ammo powerup is active
 
 	struct playerFlags_s {
 		bool		forward			:1;
