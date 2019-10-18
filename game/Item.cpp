@@ -610,7 +610,7 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 		return player->givePowerJump();
 	case 2:
 		// speed boost
-		return player->givePowerSpeed();
+		return player->givePowerHaste();
 	case 3:
 		// more damage done (strength)
 		return player->givePowerStrength();

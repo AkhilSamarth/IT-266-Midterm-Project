@@ -1105,8 +1105,8 @@ idPlayer::idPlayer() {
 	// vars for mod
 	powerUpTimer = 0;
 	jumpHeight = pm_jumpheight.GetFloat();
-	isSpeedActive = false;
 	isAmmoActive = false;
+	isShieldActive = false;
 
 	weapon					= NULL;
 
@@ -8764,9 +8764,6 @@ void idPlayer::AdjustSpeed( void ) {
 		speed *= 0.33f;
 	}
 
-	// if the speed powerup is active, increase speed
-	speed *= isSpeedActive ? 2 : 1;
-
 	physicsObj.SetSpeed( speed, pm_crouchspeed.GetFloat() );
 }
 
@@ -9296,6 +9293,9 @@ bool idPlayer::givePowerJump() {
 
 	powerUpTimer = gameLocal.time;
 
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_MARINEFLAG, powerUpActiveTime * 1000);
+
 	// set jump height to twice the normal
 	jumpHeight = pm_jumpheight.GetFloat() * 2;
 
@@ -9303,17 +9303,16 @@ bool idPlayer::givePowerJump() {
 	return true;
 }
 
-bool idPlayer::givePowerSpeed() {
+bool idPlayer::givePowerHaste() {
 	// make sure timer isn't already running
 	if (powerUpTimer > 0) {
 		return false;
 	}
 
 	powerUpTimer = gameLocal.time;
-	
-	// set boolean for speed powerup and adjust speed
-	isSpeedActive = true;
-	AdjustSpeed();
+
+	// use Quake's built in haste power up for this
+	GivePowerUp(POWERUP_HASTE, powerUpActiveTime * 1000);
 	
 	gameLocal.Printf("Speed started\n");
 	return true;
@@ -9326,6 +9325,10 @@ bool idPlayer::givePowerStrength() {
 	}
 
 	powerUpTimer = gameLocal.time;
+
+	// use Quake's built in quad damage power up for strength
+	GivePowerUp(POWERUP_QUADDAMAGE, powerUpActiveTime * 1000);
+
 	gameLocal.Printf("Strength started\n");
 	return true;
 }
@@ -9337,6 +9340,13 @@ bool idPlayer::givePowerShield() {
 	}
 
 	powerUpTimer = gameLocal.time;
+
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_ONEFLAG, powerUpActiveTime * 1000);
+
+	// set shield powerup boolean
+	isShieldActive = true;
+
 	gameLocal.Printf("Shield started\n");
 	return true;
 }
@@ -9348,6 +9358,9 @@ bool idPlayer::givePowerAmmo() {
 	}
 
 	powerUpTimer = gameLocal.time;
+
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_STROGGFLAG, powerUpActiveTime * 1000);
 
 	// set ammo powerup boolean
 	isAmmoActive = true;
@@ -9364,9 +9377,11 @@ void idPlayer::clearPowers() {
 	// reset jump
 	jumpHeight = pm_jumpheight.GetFloat();
 
-	// reset speed
-	isSpeedActive = false;
-	AdjustSpeed();
+	// reset speed and strength
+	ClearPowerUps();
+
+	// reset shield
+	isShieldActive = false;
 
 	// reset ammo
 	isAmmoActive = false;
@@ -10175,6 +10190,11 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 	// RAVEN BEGIN
 	// twhitaker: difficulty levels
 	float modifiedDamageScale = damageScale;
+
+	// if this is the player shield powerup is active, reduce damage scale
+	if (this == gameLocal.GetLocalPlayer() && isShieldActive) {
+		modifiedDamageScale *= 0.25;
+	}
 	
 	if ( !gameLocal.isMultiplayer ) {
 		if ( inflictor != gameLocal.world ) {

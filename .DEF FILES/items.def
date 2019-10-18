@@ -456,7 +456,7 @@ entityDef item_powerup_jump
 	"inv_powerup"			"1"
 }
 
-entityDef item_powerup_speed
+entityDef item_powerup_haste
 {
 	"inherit"				"item_health"
 	"model"					"models/pick_ups/sp_pickups/sp_hyper_ammo.lwo"
