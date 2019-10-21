@@ -733,6 +733,8 @@ stateResult_t rvWeaponNailgun::State_Fire( const stateParms_t& parms ) {
 			if ( !wsfl.attack && !AmmoInClip() && AmmoAvailable() && AutoReload ( ) && !wsfl.lowerWeapon ) {
 				// do not autoreload, ammo should regen automatically
 				//PostState ( "Reload", 4 );
+
+				PostState("Idle", 4);
 			} else {
 				PostState ( "Idle", 4 );
 			}

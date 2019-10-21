@@ -106,7 +106,7 @@ entityDef weapon_nailgun
 
 	"joint_world_flash"			"nailgun_rotating_drum"
 
-	"fireRate"					"0.25"
+	"fireRate"					"0.1"
 	"spread"					"1"
 	"spread_mp"					"0"
 	"spreadSeek"				"5"
