@@ -110,7 +110,7 @@ entityDef weapon_nailgun
 	"spread"					"1"
 	"spread_mp"					"0"
 	"spreadSeek"				"5"
-	"drumSpeed"					".8"
+	"drumSpeed"					"0"
 	
 	"inv_weapon"				"weapon_nailgun"
 	"inv_start_ammo_nailgun"			"50"
