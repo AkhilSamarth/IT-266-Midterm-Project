@@ -590,7 +590,7 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 
 	if ( spawnArgs.GetBool( "inv_carry" ) ) {
 		return player->GiveInventoryItem( &spawnArgs );
-	} 
+	}
 	
 	// Handle the special ammo pickup that gives ammo for the weapon the player currently has
 	if ( spawnArgs.GetBool( "item_currentWeaponAmmo" ) ) {
@@ -602,6 +602,25 @@ bool idItem::GiveToPlayer( idPlayer *player ) {
 		}
 		return false;
 	} 
+
+	// custom powerups
+	switch (spawnArgs.GetInt("inv_powerup")) {
+	case 1:
+		// jump boost
+		return player->givePowerJump();
+	case 2:
+		// speed boost
+		return player->givePowerHaste();
+	case 3:
+		// more damage done (strength)
+		return player->givePowerStrength();
+	case 4:
+		// less damage taken (shield)
+		return player->givePowerShield();
+	case 5:
+		// no ammo used
+		return player->givePowerAmmo();
+	}
 
 	return player->GiveItem( this );
 }

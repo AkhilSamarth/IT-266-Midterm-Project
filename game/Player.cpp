@@ -1102,6 +1102,12 @@ idPlayer::idPlayer() {
 	lastHitTime				= 0;
 	lastSavingThrowTime		= 0;
 
+	// vars for mod
+	powerUpTimer = 0;
+	jumpHeight = pm_jumpheight.GetFloat();
+	isAmmoActive = false;
+	isShieldActive = false;
+
 	weapon					= NULL;
 
 	hud						= NULL;
@@ -8965,7 +8971,7 @@ void idPlayer::Move( void ) {
 
 	// set physics variables
 	physicsObj.SetMaxStepHeight( pm_stepsize.GetFloat() );
-	physicsObj.SetMaxJumpHeight( pm_jumpheight.GetFloat() );
+	physicsObj.SetMaxJumpHeight(jumpHeight);
 
 	if ( noclip ) {
 		physicsObj.SetContents( 0 );
@@ -9275,6 +9281,114 @@ void idPlayer::LoadDeferredModel( void ) {
 	}
 }
 
+// how much time power up should be active for in seconds
+const int powerUpActiveTime = 5;
+
+// methods for giving the player power ups
+bool idPlayer::givePowerJump() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_MARINEFLAG, powerUpActiveTime * 1000);
+
+	// set jump height to twice the normal
+	jumpHeight = pm_jumpheight.GetFloat() * 2;
+
+	gameLocal.Printf("Jump started\n");
+	return true;
+}
+
+bool idPlayer::givePowerHaste() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+
+	// use Quake's built in haste power up for this
+	GivePowerUp(POWERUP_HASTE, powerUpActiveTime * 1000);
+	
+	gameLocal.Printf("Speed started\n");
+	return true;
+}
+
+bool idPlayer::givePowerStrength() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+
+	// use Quake's built in quad damage power up for strength
+	GivePowerUp(POWERUP_QUADDAMAGE, powerUpActiveTime * 1000);
+
+	gameLocal.Printf("Strength started\n");
+	return true;
+}
+
+bool idPlayer::givePowerShield() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_ONEFLAG, powerUpActiveTime * 1000);
+
+	// set shield powerup boolean
+	isShieldActive = true;
+
+	gameLocal.Printf("Shield started\n");
+	return true;
+}
+
+bool idPlayer::givePowerAmmo() {
+	// make sure timer isn't already running
+	if (powerUpTimer > 0) {
+		return false;
+	}
+
+	powerUpTimer = gameLocal.time;
+
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_STROGGFLAG, powerUpActiveTime * 1000);
+
+	// set ammo powerup boolean
+	isAmmoActive = true;
+
+	gameLocal.Printf("Ammo started\n");
+	return true;
+}
+
+// generic method to clear power ups
+// sets all power up changes to 0
+void idPlayer::clearPowers() {
+	powerUpTimer = 0;
+
+	// reset jump
+	jumpHeight = pm_jumpheight.GetFloat();
+
+	// reset speed and strength
+	ClearPowerUps();
+
+	// reset shield
+	isShieldActive = false;
+
+	// reset ammo
+	isAmmoActive = false;
+
+	gameLocal.Printf("Cleared powers.\n");
+}
+
 /*
 ==============
 idPlayer::Think
@@ -9283,6 +9397,12 @@ Called every tic for each player
 ==============
 */
 void idPlayer::Think( void ) {
+
+	// if powerup active, check timer to see if 20 sec have passed
+	if (powerUpTimer && gameLocal.time - powerUpTimer > powerUpActiveTime * 1000) {
+		clearPowers();
+	}
+
 	renderEntity_t *headRenderEnt;
  
 	if ( talkingNPC ) {
@@ -10070,6 +10190,11 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 	// RAVEN BEGIN
 	// twhitaker: difficulty levels
 	float modifiedDamageScale = damageScale;
+
+	// if this is the player shield powerup is active, reduce damage scale
+	if (this == gameLocal.GetLocalPlayer() && isShieldActive) {
+		modifiedDamageScale *= 0.25;
+	}
 	
 	if ( !gameLocal.isMultiplayer ) {
 		if ( inflictor != gameLocal.world ) {

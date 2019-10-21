@@ -304,6 +304,11 @@ public:
 	int						lastHitTime;			// last time projectile fired by player hit target
 	int						lastSavingThrowTime;	// for the "free miss" effect
 
+	int						powerUpTimer;		// timer for powerups for custom mod
+	float					jumpHeight;			// float to keep track of jumpheight without losing original
+	bool					isAmmoActive;		// whether or not the ammo powerup is active
+	bool					isShieldActive;		// whether or not the shield powerup is active
+
 	struct playerFlags_s {
 		bool		forward			:1;
 		bool		backward		:1;
@@ -442,6 +447,15 @@ public:
 
 	virtual void			Hide( void );
 	virtual void			Show( void );
+
+	// power up methods for mod, return whether or not power up was succesfully applied
+	bool					givePowerJump();
+	bool					givePowerHaste();
+	bool					givePowerStrength();
+	bool					givePowerShield();
+	bool					givePowerAmmo();
+	
+	void					clearPowers();		// clear powers and reset timer
 
 	void					Init( void );
  	void					PrepareForRestart( void );
