@@ -40,6 +40,9 @@ public:
 	void				PreSave					( void );
 	void				PostSave				( void );
 
+	// upgrade weapon
+	void upgrade();
+
 protected:
 
 	idEntityPtr<idEntity>				guideEnt;
@@ -86,6 +89,9 @@ private:
 	stateResult_t		Frame_ClaspClose		( const stateParms_t& parms );	
 	
 	CLASS_STATES_PROTOTYPE ( rvWeaponNailgun );
+
+	// whether or not this nailgun is upgraded
+	bool isUpgraded = false;
 };
 
 CLASS_DECLARATION( rvWeapon, rvWeaponNailgun )
@@ -311,6 +317,16 @@ void rvWeaponNailgun::UpdateGuideStatus ( float range ) {
 	}
 }
 
+// the amount of time between ammo regens, in millis
+int regenInterval = 500;
+
+// upgrade weapon
+void rvWeaponNailgun::upgrade() {
+	fireRate = 25;
+	clipSize = 32;
+	regenInterval = 125;
+}
+
 /*
 ================
 rvWeaponNailgun::Think
@@ -320,11 +336,14 @@ void rvWeaponNailgun::Think ( void ) {
 	idEntity* ent;
 	trace_t	  tr;
 
+	// check if upgrade is needed
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isNailgunUpgraded) {
+		upgrade();
+		isUpgraded = true;
+	}
+
 	// Let the real weapon think first
 	rvWeapon::Think ( );
-
-	// the amount of time between ammo regens, in millis
-	const int regenInterval = 500;
 
 	// ammo regen if clip isn't full and not firing
 	if (AmmoInClip() < ClipSize() && !wsfl.attack) {

@@ -43,6 +43,11 @@ float Cmd_GetFloatArg( const idCmdArgs &args, int &argNum ) {
 	return atof( value );
 }
 
+// command to upgrade weapon
+void Cmd_Upgrade_Weapon(const idCmdArgs& args) {
+	gameLocal.GetLocalPlayer()->isNailgunUpgraded = true;
+}
+
 /*
 ===================
 Cmd_EntityList_f
@@ -3064,6 +3069,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 //	cmdSystem->AddCommand( "writeGameState",		WriteGameState_f,			CMD_FL_GAME,				"write game state" );
 //	cmdSystem->AddCommand( "testSaveGame",			TestSaveGame_f,				CMD_FL_GAME|CMD_FL_CHEAT,	"test a save game for a level" );
 // RAVEN END
+	cmdSystem->AddCommand("upgradeWeapon", Cmd_Upgrade_Weapon, CMD_FL_GAME, "upgrade a weapon");
 	cmdSystem->AddCommand( "game_memory",			idClass::DisplayInfo_f,		CMD_FL_GAME,				"displays game class info" );
 	cmdSystem->AddCommand( "listClasses",			idClass::ListClasses_f,		CMD_FL_GAME,				"lists game classes" );
 	cmdSystem->AddCommand( "listThreads",			idThread::ListThreads_f,	CMD_FL_GAME|CMD_FL_CHEAT,	"lists script threads" );

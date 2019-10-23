@@ -309,6 +309,9 @@ public:
 	bool					isAmmoActive;		// whether or not the ammo powerup is active
 	bool					isShieldActive;		// whether or not the shield powerup is active
 
+	// booleans for weapon upgrade
+	bool isNailgunUpgraded = false;
+
 	struct playerFlags_s {
 		bool		forward			:1;
 		bool		backward		:1;
