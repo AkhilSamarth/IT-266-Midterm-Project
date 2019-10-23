@@ -10190,11 +10190,6 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 	// RAVEN BEGIN
 	// twhitaker: difficulty levels
 	float modifiedDamageScale = damageScale;
-
-	// if this is the player shield powerup is active, reduce damage scale
-	if (this == gameLocal.GetLocalPlayer() && isShieldActive) {
-		modifiedDamageScale *= 0.25;
-	}
 	
 	if ( !gameLocal.isMultiplayer ) {
 		if ( inflictor != gameLocal.world ) {
@@ -10263,6 +10258,11 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 	// We pass in damageScale, because this function calculates a modified damageScale 
 	// based on g_skill, and we don't want to compensate for skill level twice.
 	CalcDamagePoints( inflictor, attacker, &damageDef->dict, damageScale, location, &damage, &armorSave );
+
+	// if shield powerup is active, reduce damage
+	if (isShieldActive) {
+		damage /= 4;
+	}
 
 	//
 	// determine knockback
