@@ -54,6 +54,12 @@ rvWeaponRailgun::Spawn
 */
 void rvWeaponRailgun::Spawn ( void ) {
 	SetState ( "Raise", 0 );	
+
+	// get rid of zoom gui
+	zoomGui = NULL;
+
+	// increase zoom time, normal = 0.1
+	zoomTime = 0.4;
 }
 
 /*
@@ -106,6 +112,7 @@ void rvWeaponRailgun::Think ( void ) {
 	// Let the real weapon think first
 	rvWeapon::Think ( );
 
+	
 	if ( zoomGui && wsfl.zoom && !gameLocal.isMultiplayer ) {
 		int ammo = AmmoInClip();
 		if ( ammo >= 0 ) {
