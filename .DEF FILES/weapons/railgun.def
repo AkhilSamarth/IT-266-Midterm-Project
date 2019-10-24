@@ -93,7 +93,8 @@ entityDef weapon_railgun
 	"inv_icon"				"gfx/guis/hud/icons/item_railgun"
 	"inv_name"				"#str_107408"
 	
-	"def_hitscan"				"hitscan_railgun"	
+	//"def_hitscan"				"hitscan_railgun"	not hitscan anymore
+	"def_projectile"			"projectile_nail"		// use nail as crossbow bolt
 	"mtr_crosshair"				"gfx/guis/crosshairs/crosshair_railgun"
 
 	"ammoType"				"ammo_railgun"

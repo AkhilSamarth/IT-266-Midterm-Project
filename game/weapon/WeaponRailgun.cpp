@@ -60,6 +60,11 @@ void rvWeaponRailgun::Spawn ( void ) {
 
 	// increase zoom time, normal = 0.1
 	zoomTime = 0.4;
+
+	// make gun not hitscan
+	wfl.attackHitscan = false;
+
+	attackDict.Print();
 }
 
 /*
