@@ -21,6 +21,9 @@ public:
 	void					PostSave			( void );
 	void					ClientUnstale		( void );
 
+	// upgrade weapon
+	void upgrade();
+
 protected:
 	jointHandle_t			jointBatteryView;
 
@@ -31,6 +34,12 @@ private:
 	stateResult_t		State_Reload	( const stateParms_t& parms );
 
 	void				Event_RestoreHum	( void );
+	
+	int ammoReloadTimer = 0;				// timer for reloading
+	int ammoReloadInterval = 2000;		// time in millis for ammo to reload
+
+	// whether or not this nailgun is upgraded
+	bool isUpgraded = false;
 
 	CLASS_STATES_PROTOTYPE ( rvWeaponRailgun );
 };
@@ -63,8 +72,12 @@ void rvWeaponRailgun::Spawn ( void ) {
 
 	// make gun not hitscan
 	wfl.attackHitscan = false;
+}
 
-	attackDict.Print();
+void rvWeaponRailgun::upgrade() {
+	gameLocal.Printf("upgrades railgun");
+	// quicker reload
+	ammoReloadInterval = 1000;
 }
 
 /*
@@ -117,12 +130,26 @@ void rvWeaponRailgun::Think ( void ) {
 	// Let the real weapon think first
 	rvWeapon::Think ( );
 
-	
-	if ( zoomGui && wsfl.zoom && !gameLocal.isMultiplayer ) {
-		int ammo = AmmoInClip();
-		if ( ammo >= 0 ) {
-			zoomGui->SetStateInt( "player_ammo", ammo );
-		}			
+	// check if upgrade is needed
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isRailgunUpgraded) {
+		upgrade();
+		isUpgraded = true;
+	}
+
+	// if clip is empty, deal with timers to fill it (provided player has ammo)
+	if (AmmoInClip() == 0) {
+		// if timer isn't started yet, start it
+		if (ammoReloadTimer == 0) {
+			ammoReloadTimer = gameLocal.time;
+		}
+		// if timer has started, check if the required interval has passed
+		else if (gameLocal.time - ammoReloadTimer >= ammoReloadInterval) {
+			// reload
+			AddToClip(ClipSize());
+
+			// reset timer
+			ammoReloadTimer = 0;
+		}
 	}
 }
 
@@ -172,14 +199,14 @@ stateResult_t rvWeaponRailgun::State_Idle( const stateParms_t& parms ) {
 				SetState ( "Fire", 0 );
 				return SRESULT_DONE;
 			}  
-			// Auto reload?
+			// no reloading, clip "reloaded" in code
 			if ( AutoReload() && !AmmoInClip ( ) && AmmoAvailable () ) {
-				SetState ( "reload", 2 );
-				return SRESULT_DONE;
+				//SetState ( "reload", 2 );
+				//return SRESULT_DONE;
 			}
 			if ( wsfl.netReload || (wsfl.reload && AmmoInClip() < ClipSize() && AmmoAvailable()>AmmoInClip()) ) {
-				SetState ( "Reload", 4 );
-				return SRESULT_DONE;			
+				//SetState ( "Reload", 4 );
+				//return SRESULT_DONE;			
 			}
 			return SRESULT_WAIT;
 	}

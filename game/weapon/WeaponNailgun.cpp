@@ -336,14 +336,14 @@ void rvWeaponNailgun::Think ( void ) {
 	idEntity* ent;
 	trace_t	  tr;
 
+	// Let the real weapon think first
+	rvWeapon::Think ( );
+
 	// check if upgrade is needed
 	if (!isUpgraded && gameLocal.GetLocalPlayer()->isNailgunUpgraded) {
 		upgrade();
 		isUpgraded = true;
 	}
-
-	// Let the real weapon think first
-	rvWeapon::Think ( );
 
 	// ammo regen if clip isn't full and not firing
 	if (AmmoInClip() < ClipSize() && !wsfl.attack) {

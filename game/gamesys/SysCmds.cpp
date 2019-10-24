@@ -46,6 +46,7 @@ float Cmd_GetFloatArg( const idCmdArgs &args, int &argNum ) {
 // command to upgrade weapon
 void Cmd_Upgrade_Weapon(const idCmdArgs& args) {
 	gameLocal.GetLocalPlayer()->isNailgunUpgraded = true;
+	gameLocal.GetLocalPlayer()->isRailgunUpgraded = true;
 }
 
 /*
