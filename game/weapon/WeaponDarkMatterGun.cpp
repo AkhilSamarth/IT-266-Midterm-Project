@@ -58,6 +58,14 @@ private:
 	stateResult_t		State_Idle		( const stateParms_t& parms );
 	stateResult_t		State_Fire		( const stateParms_t& parms );
 	stateResult_t		State_Reload	( const stateParms_t& parms );
+
+	// vars for gravity gun
+	const float range = 200;		// range is based on experimentation, 200 seems good
+
+	bool isHoldingItem = false;		// whether or not an item is being held currently
+	idEntity* entity;		// entity being held
+	float distance;			// distance from gun that entity is being held
+	int thinkFlags;
 	
 	CLASS_STATES_PROTOTYPE ( rvWeaponDarkMatterGun );
 };
@@ -90,19 +98,58 @@ rvWeaponDarkMatterGun::~rvWeaponDarkMatterGun ( void ) {
 void rvWeaponDarkMatterGun::Think() {
 	// trace for checking what to pick up
 	trace_t trace;
-	const float range = 200;		// range is based on experimentation, 200 seems good
 
 	// weapon should think first
 	rvWeapon::Think();
 
-	// trace, taken from nailgun and changed
+	// check if mouse button is being held
+	if (!gameLocal.GetLocalPlayer()->pfl.attackHeld) {
+		// release item if one is being held
+		if (isHoldingItem) {
+			isHoldingItem = false;
+
+			// restore original thinking
+			entity->thinkFlags = thinkFlags;
+		}
+		return;
+	}
+
+	// if an item is currently being held by the gun, process it, otherwise check for item pickups
+	if (isHoldingItem) {
+		// translate item to the same distance along the player's view axis that it was picked up from
+		idVec3 blah = playerViewOrigin + playerViewAxis[0] * 200;
+		entity->SetOrigin(blah);
+
+		gameLocal.Printf("new item pos: %f, %f, %f\n", blah.x, blah.y, blah.z);
+
+		return;
+	}
+
+	// trace to check for items
 	gameLocal.TracePoint(owner, trace,
 		playerViewOrigin,
 		playerViewOrigin + playerViewAxis[0] * range,
 		MASK_ALL, owner);
 
-	// check trace
-	gameLocal.Printf("trace: %f\n", trace.fraction);
+	// check if trace hit anything
+	if (trace.fraction == 1) {
+		return;
+	}
+
+	// get a pointer to the entity this trace hit
+	entity = gameLocal.FindEntity(trace.c.entityNum);
+
+	// only pick up items
+	if (entity->name.Cmpn("idItem", 6) != 0) {
+		return;
+	}
+
+	// hold item, disable all thinking (store original flags first)
+	isHoldingItem = true;
+	distance = trace.c.dist;
+	thinkFlags = entity->thinkFlags;
+	gameLocal.Printf("flags: %i\n", thinkFlags);
+	entity->thinkFlags &= ~TH_ALL;
 }
 
 /*
