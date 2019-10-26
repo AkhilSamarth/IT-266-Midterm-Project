@@ -94,7 +94,7 @@ entityDef weapon_railgun
 	"inv_name"				"#str_107408"
 	
 	//"def_hitscan"				"hitscan_railgun"	not hitscan anymore
-	"def_projectile"			"projectile_nail"		// use nail as crossbow bolt
+	"def_projectile"			"projectile_bolt"		// bolt defined below
 	"mtr_crosshair"				"gfx/guis/crosshairs/crosshair_railgun"
 
 	"ammoType"				"ammo_railgun"
@@ -166,6 +166,66 @@ entityDef weapon_railgun
 	"gui_zoom"					"guis/weapons/railgun_scope.gui"
 
 	"net_syncPhysics"			"1"
+}
+
+// custom crossbow bolt, based on nail from nailgun
+entityDef projectile_bolt
+{
+	"spawnclass"				"idProjectile"
+	"mins"						"-1 -1 -1"
+	"maxs"						"1 1 1"
+	"noshadows"					"1"
+	"clipmask_largeshot"		"0"
+								
+	"model"						"models/weapons/nailgun/nail.ase"
+	"def_damage"				"damage_boltDirect"
+	//"def_splash_damage"			"damage_boltSplash" no splash damage
+																											
+	"health"					"0"
+	"speed"						"1200"
+	"gravity"					"0"
+	"fuse"						"10"	// stay alive for longer than default (4)
+								
+	"detonate_on_fuse"			"1"
+	"detonate_on_death"			"0"
+	"detonate_on_world"			"1"
+	"detonate_on_actor"			"1"
+	"detonate_on_bounce"		"1"
+																
+	"decal_size"				"8"
+
+	//sigh... so that a splash damage projectile can still have it's impact effect suppressed on buddy corpses... :/
+	"bloodyImpactEffect"		"1"
+	
+	"fx_fly"			"effects/weapons/nailgun/fly.fx"
+	"fx_impact"			"effects/weapons/nailgun/impact_default.fx"
+	"fx_impact_water"		"effects/ambient/splash_smll.fx"
+	"fx_impact_concrete"		"effects/weapons/nailgun/impact_concrete.fx"
+	"fx_impact_rock"		"effects/weapons/nailgun/impact_concrete.fx"
+	"fx_impact_monstermetal"	"effects/weapons/machinegun/impact_monstermetal.fx"
+	"fx_impact_flesh"		"effects/weapons/machinegun/impact_flesh.fx"	
+	"fx_impact_glass"		"effects/weapons/nailgun/impact_glass.fx"					
+	"fx_impact_bpglass"		"effects/weapons/nailgun/impact_bpglass.fx"
+	"fx_impact_electronics"		"effects/weapons/nailgun/impact_electronics.fx"
+	"fx_impact_mp"			"effects/weapons/nailgun/impact_default_mp.fx"
+	"fx_impact_concrete_mp"		"effects/weapons/nailgun/impact_default_mp.fx"
+	"fx_impact_rock_mp"		"effects/weapons/nailgun/impact_default_mp.fx"
+	"fx_impact_glass_mp"		"effects/weapons/nailgun/impact_default_mp.fx"
+	"fx_impact_bpglass_mp"		"effects/weapons/nailgun/impact_default_mp.fx"
+	"fx_impact_electronics_mp"	"effects/weapons/nailgun/impact_default_mp.fx"
+}
+
+entityDef damage_boltDirect 
+{
+	"damage"					"150"	// should one-shot kill most things
+//	"push"						"1000"
+	"gib"						"0"
+
+	"deathPush"					"150"
+	"deathPushMin"				"2000 350"
+	"deathPushMax"				"4000 500"
+
+	"bleed"						"1"
 }
 
 entityDef weapon_railgun_mp

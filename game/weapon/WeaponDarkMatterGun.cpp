@@ -100,6 +100,9 @@ void rvWeaponDarkMatterGun::Spawn ( void ) {
 	chargeDuration = SEC2MS ( spawnArgs.GetFloat ( "chargeDuration", ".5" ) );
 	
 	jointCore = viewModel->GetAnimator()->GetJointHandle ( spawnArgs.GetString ( "joint_core" ) );
+
+	// make this gun hitscan
+	wfl.attackHitscan = true;
 }
 
 /*

@@ -103,7 +103,8 @@ entityDef weapon_dmg
 	"inv_name"					"#str_107401"	
 
 	"weaponname"				"Dark Matter Gun"
-	"def_projectile"			"projectile_dmg"
+	//"def_projectile"			"projectile_dmg"	don't want this to be projectile anymore
+	"def_hitscan"			"hitscan_railgun"
 	"ammoType"					"ammo_dmg"
 	"clipSize"					"1"
 	"ammoRequired"				"1"
