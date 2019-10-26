@@ -104,10 +104,10 @@ entityDef weapon_dmg
 
 	"weaponname"				"Dark Matter Gun"
 	//"def_projectile"			"projectile_dmg"	don't want this to be projectile anymore
-	"def_hitscan"			"hitscan_railgun"
+	"def_hitscan"			"hitscan_gravitygun"
 	"ammoType"					"ammo_dmg"
 	"clipSize"					"1"
-	"ammoRequired"				"1"
+	"ammoRequired"				"0"
 	"mtr_icon"					"gfx/guis/hud/icons/gun_darkmatter"
 
 //	"muzzle_kick_time"			"0.8"
@@ -160,6 +160,35 @@ entityDef weapon_dmg
 //	"launchFromBarrel"			"1"
 	"foreshorten"				".55"
 	"net_syncPhysics"			"1"	
+}
+
+// custom hitscan that has much shorter range, since gravity gun shouldn't pick anything up that's far away
+entityDef hitscan_gravitygun
+{
+	"range"						"400"	// shorten range
+
+	"push"						"40000"
+	
+	"def_damage"				"damage_railgun"
+		
+	"fx_impact"				"effects/weapons/railgun/impact_default.fx"
+	"fx_impact_water"			"effects/ambient/splash_med.fx"
+	"fx_path"				"effects/weapons/railgun/trail.fx"
+	"fx_impact_bpglass"			"effects/weapons/railgun/impact_bpglass.fx"
+	"fx_impact_glass"			"effects/weapons/railgun/impact_glass.fx"
+	"fx_impact_concrete"			"effects/weapons/railgun/impact_concrete.fx"
+	"fx_impact_rock"			"effects/weapons/railgun/impact_concrete.fx"	
+	"fx_impact_electronics"			"effects/weapons/railgun/impact_electronics.fx"
+	"fx_impact_flesh"			"effects/weapons/railgun/impact_flesh.fx"
+	"fx_impact_monstermetal"		"effects/weapons/railgun/impact_flesh.fx"
+	"fx_impact_mp"				"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_concrete_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_rock_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_glass_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_bpglass_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_electronics_mp"		"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_path_mp"				"effects/weapons/railgun/trail_mp.fx"	
+	"fxOriginOffset"			"0 -15 10"
 }
 
 entityDef weapon_dmg_mp

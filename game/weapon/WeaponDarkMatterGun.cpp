@@ -19,6 +19,9 @@ public:
 	void					PreSave					( void );
 	void					PostSave				( void );
 
+	// add think function
+	virtual void Think();
+
 #ifdef _XENON
 	virtual bool		AllowAutoAim			( void ) const { return false; }
 #endif
@@ -81,6 +84,25 @@ rvWeaponDarkMatterGun::~rvWeaponDarkMatterGun
 */
 rvWeaponDarkMatterGun::~rvWeaponDarkMatterGun ( void ) {
 	StopRings ( );
+}
+
+// custom think function, format copied from other weapons
+void rvWeaponDarkMatterGun::Think() {
+	// trace for checking what to pick up
+	trace_t trace;
+	const float range = 200;		// range is based on experimentation, 200 seems good
+
+	// weapon should think first
+	rvWeapon::Think();
+
+	// trace, taken from nailgun and changed
+	gameLocal.TracePoint(owner, trace,
+		playerViewOrigin,
+		playerViewOrigin + playerViewAxis[0] * range,
+		MASK_ALL, owner);
+
+	// check trace
+	gameLocal.Printf("trace: %f\n", trace.fraction);
 }
 
 /*
