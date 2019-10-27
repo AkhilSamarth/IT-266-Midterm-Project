@@ -66,7 +66,7 @@ entityDef weapon_lightninggun
 
 	"fireRate"					".05"
 	"spread"					"1"
-	"range"						"1600"
+	"range"						"200"
 
 	"joint_attach"				"LG_ATTACHER"
   	"joint_view_flash"			"barrel"

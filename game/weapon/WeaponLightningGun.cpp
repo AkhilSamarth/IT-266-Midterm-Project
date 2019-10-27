@@ -90,6 +90,10 @@ private:
 
 	void				Event_RestoreHum	( void );
 
+	// upgrades
+	bool isUpgraded = false;
+	void upgrade();
+
 	CLASS_STATES_PROTOTYPE ( rvWeaponLightningGun );
 };
 
@@ -124,6 +128,12 @@ rvWeaponLightningGun::~rvWeaponLightningGun( void ) {
 			tubeEffects[i]->Stop( );
 		}
 	}
+}
+
+void rvWeaponLightningGun::upgrade() {
+	// increase range and decrease firerate (controls ammo consumption)
+	range *= 2;
+	fireRate *= 2;
 }
 
 /*
@@ -258,6 +268,12 @@ void rvWeaponLightningGun::Think ( void ) {
 	trace_t	  tr;
 
 	rvWeapon::Think();
+
+	// check for upgrade
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isLightningUpgraded) {
+		isUpgraded = true;
+		upgrade();
+	}
 
 	UpdateTubes();
 
