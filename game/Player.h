@@ -313,6 +313,9 @@ public:
 	bool isNailgunUpgraded = false;
 	bool isRailgunUpgraded = false;
 	bool isDMGUpgraded = false;
+	bool isBlasterUpgraded = false;
+	bool isHyperUpgraded = false;
+	bool isLightningUpgraded = false;
 
 	struct playerFlags_s {
 		bool		forward			:1;

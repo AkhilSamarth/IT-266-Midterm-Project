@@ -48,6 +48,9 @@ void Cmd_Upgrade_Weapons(const idCmdArgs& args) {
 	gameLocal.GetLocalPlayer()->isNailgunUpgraded = true;
 	gameLocal.GetLocalPlayer()->isRailgunUpgraded = true;
 	gameLocal.GetLocalPlayer()->isDMGUpgraded = true;
+	gameLocal.GetLocalPlayer()->isBlasterUpgraded = true;
+	gameLocal.GetLocalPlayer()->isHyperUpgraded = true;
+	gameLocal.GetLocalPlayer()->isLightningUpgraded = true;
 }
 
 /*
