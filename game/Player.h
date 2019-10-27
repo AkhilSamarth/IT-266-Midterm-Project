@@ -312,6 +312,7 @@ public:
 	// booleans for weapon upgrade
 	bool isNailgunUpgraded = false;
 	bool isRailgunUpgraded = false;
+	bool isDMGUpgraded = false;
 
 	struct playerFlags_s {
 		bool		forward			:1;

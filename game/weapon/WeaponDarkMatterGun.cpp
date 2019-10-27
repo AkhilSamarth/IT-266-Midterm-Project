@@ -59,9 +59,12 @@ private:
 	stateResult_t		State_Fire		( const stateParms_t& parms );
 	stateResult_t		State_Reload	( const stateParms_t& parms );
 
+	void upgrade();
+	bool isUpgraded = false;
+
 	// vars for gravity gun
 	const float range = 200;		// range is based on experimentation, 200 seems good
-	const float power = 1000;			// how powerful the launch is
+	float power = 600;			// how powerful the launch is
 	const int clickCooldown = 500;	// minimum time between clicks in millis
 
 	int clickTimer = 0;			// cooldown timer for clicking
@@ -69,7 +72,6 @@ private:
 	bool isHoldingItem = false;		// whether or not an item is being held currently
 	idEntity* entity;		// entity being held
 	float distance;			// distance from gun that entity is being held
-	int thinkFlags;			// used to store flags before picking up object
 	idVec3 gravity;			// used to store old gravity before picking up object
 	
 	CLASS_STATES_PROTOTYPE ( rvWeaponDarkMatterGun );
@@ -99,6 +101,13 @@ rvWeaponDarkMatterGun::~rvWeaponDarkMatterGun ( void ) {
 	StopRings ( );
 }
 
+void rvWeaponDarkMatterGun::upgrade() {
+	isUpgraded = true;
+
+	// double power
+	power *= 2;
+}
+
 // custom think function, format copied from other weapons
 void rvWeaponDarkMatterGun::Think() {
 	// trace for checking what to pick up
@@ -106,6 +115,16 @@ void rvWeaponDarkMatterGun::Think() {
 
 	// weapon should think first
 	rvWeapon::Think();
+
+	// check for upgrades
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isDMGUpgraded) {
+		upgrade();
+	}
+
+	// make sure rings aren't there when nothing is being held
+	if (!isHoldingItem) {
+		StopRings();
+	}
 
 	// if mouse button clicked and cooldown timer is over, either try to pick up or release object
 	if ((gameLocal.GetLocalPlayer()->usercmd.buttons & BUTTON_ATTACK) && (gameLocal.time - clickTimer >= clickCooldown)) {
@@ -116,16 +135,19 @@ void rvWeaponDarkMatterGun::Think() {
 
 			isHoldingItem = false;
 
-			// restore original thinking and physics (so object can fall, even if it wasn't before)
-			entity->thinkFlags = thinkFlags;
-			entity->thinkFlags |= TH_PHYSICS;
+			// restore original gravity
 			entity->GetPhysics()->SetGravity(gravity);
 
 			// launch in direction that player is looking
 			float mass = entity->GetPhysics()->GetMass();
+
+			gameLocal.Printf("mass: %f\n", mass);
 			
 			// take mass into account if it is >= 1
-			entity->GetPhysics()->SetLinearVelocity(playerViewAxis[0] * power / (mass >= 1 ? mass : 1));
+			entity->GetPhysics()->SetLinearVelocity(playerViewAxis[0] * power / (mass >= 1 ? (mass / 50) : 1));
+
+			// "fire" for noise and animation
+			SetState("Fire", 0);
 
 			return;
 		}
@@ -145,18 +167,25 @@ void rvWeaponDarkMatterGun::Think() {
 			// get a pointer to the entity this trace hit
 			entity = gameLocal.FindEntity(trace.c.entityNum);
 
-			// only pick up items
-			if (entity->name.Cmpn("idItem", 6) != 0) {
-				return;
+			// only pick up items unless upgraded
+			idStr& name = entity->name;
+			if (isUpgraded) {
+				if ((name.Cmpn("idItem", 6) != 0) && (name.Cmpn("rvMonster", 9) != 0)) {
+					return;
+				}
+			}
+			else {
+				if (name.Cmpn("idItem", 6) != 0) {
+					return;
+				}
 			}
 
-			// start timer
+			// start timer and rings
 			clickTimer = gameLocal.time;
+			StartRings(false);
 
 			// hold item, disable all thinking for item (store original flags first)
 			isHoldingItem = true;
-			thinkFlags = entity->thinkFlags;
-			entity->thinkFlags &= ~TH_ALL;
 			distance = gameLocal.GetLocalPlayer()->DistanceTo(trace.c.point);
 			gravity = entity->GetPhysics()->GetGravity();
 			entity->GetPhysics()->SetGravity(idVec3(0, 0, 0));
@@ -167,8 +196,8 @@ void rvWeaponDarkMatterGun::Think() {
 		isHoldingItem = false;
 
 		// restore original thinking and physics (so object can fall, even if it wasn't before)
-		entity->thinkFlags = thinkFlags;
-		entity->thinkFlags |= TH_PHYSICS;
+		//entity->thinkFlags = thinkFlags;
+		//entity->thinkFlags |= TH_PHYSICS;
 		entity->GetPhysics()->SetGravity(gravity);
 
 		return;
@@ -381,10 +410,12 @@ stateResult_t rvWeaponDarkMatterGun::State_Idle( const stateParms_t& parms ) {
 				return SRESULT_DONE;
 			}		
 
+			/* don't fire
 			if ( gameLocal.time > nextAttackTime && wsfl.attack && AmmoInClip ( ) ) {
 				SetState ( "Fire", 0 );
 				return SRESULT_DONE;
-			}  
+			} 
+			*/
 
 			if ( wsfl.netReload ) {
 				if ( owner->entityNumber != gameLocal.localClientNum ) {
@@ -414,7 +445,8 @@ stateResult_t rvWeaponDarkMatterGun::State_Fire ( const stateParms_t& parms ) {
 		case STAGE_INIT:
 			StopRings ( );
 
-			nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
+			// cooldown is managed manually
+			//nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
 			Attack ( false, 1, spread, 0, 1.0f );
 			PlayAnim ( ANIMCHANNEL_ALL, "fire", 0 );	
 			return SRESULT_STAGE ( STAGE_WAIT );

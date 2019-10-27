@@ -137,8 +137,10 @@ entityDef weapon_dmg
 
 	"snd_acquire"				"pickup_weapon"
 	"snd_rings"					"weapon_darkmatter_whoosh"
-	"snd_quaddamage"			"weapon_quaddamage_fire"
-	"snd_noAmmo"				"weapon_darkmatter_dryfire"
+	
+	// firing sounds done automatically
+	//"snd_quaddamage"			"weapon_quaddamage_fire"
+	//"snd_noAmmo"				"weapon_darkmatter_dryfire"
 
 	"def_viewStyle"				"viewStyle_q3_dmg"
 	
