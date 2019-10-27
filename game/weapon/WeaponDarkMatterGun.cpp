@@ -66,6 +66,7 @@ private:
 	idEntity* entity;		// entity being held
 	float distance;			// distance from gun that entity is being held
 	int thinkFlags;
+	idVec3 gravity;
 	
 	CLASS_STATES_PROTOTYPE ( rvWeaponDarkMatterGun );
 };
@@ -108,8 +109,13 @@ void rvWeaponDarkMatterGun::Think() {
 		if (isHoldingItem) {
 			isHoldingItem = false;
 
-			// restore original thinking
+			// restore original thinking and physics (so object can fall, even if it wasn't before)
 			entity->thinkFlags = thinkFlags;
+			entity->thinkFlags |= TH_PHYSICS;
+			entity->GetPhysics()->SetGravity(gravity);
+
+			// set velocity to 0, so the object doesn't do weird flying stuff
+			//entity->GetPhysics()->SetLinearVelocity(idVec3(0, 0, 0));
 		}
 		return;
 	}
@@ -117,10 +123,7 @@ void rvWeaponDarkMatterGun::Think() {
 	// if an item is currently being held by the gun, process it, otherwise check for item pickups
 	if (isHoldingItem) {
 		// translate item to the same distance along the player's view axis that it was picked up from
-		idVec3 blah = playerViewOrigin + playerViewAxis[0] * 200;
-		entity->SetOrigin(blah);
-
-		gameLocal.Printf("new item pos: %f, %f, %f\n", blah.x, blah.y, blah.z);
+		entity->GetPhysics()->SetOrigin(playerViewOrigin + playerViewAxis[0] * distance);
 
 		return;
 	}
@@ -146,10 +149,11 @@ void rvWeaponDarkMatterGun::Think() {
 
 	// hold item, disable all thinking (store original flags first)
 	isHoldingItem = true;
-	distance = trace.c.dist;
 	thinkFlags = entity->thinkFlags;
-	gameLocal.Printf("flags: %i\n", thinkFlags);
 	entity->thinkFlags &= ~TH_ALL;
+	distance = gameLocal.GetLocalPlayer()->DistanceTo(trace.c.point);
+	gravity = entity->GetPhysics()->GetGravity();
+	entity->GetPhysics()->SetGravity(idVec3(0, 0, 0));
 }
 
 /*
