@@ -115,10 +115,12 @@ bool rvWeaponBlaster::UpdateAttack ( void ) {
 	// If they have the charge mod and they have overcome the initial charge 
 	// delay then transition to the charge state.
 	if ( fireHeldTime != 0 ) {
+		/* don't go to charge state
 		if ( gameLocal.time - fireHeldTime > chargeDelay ) {
 			SetState ( "Charge", 4 );
 			return true;
 		}
+		*/
 
 		// If the fire button was let go but was pressed at one point then 
 		// release the shot.

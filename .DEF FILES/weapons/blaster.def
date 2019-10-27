@@ -81,12 +81,14 @@ entityDef weapon_blaster
 	"chargeTime"				".8"
 	"chargeDelay"				".1"
 	"chargeGlow"				"0 .4"
-	"fireRate"					".15"
+	"fireRate"					".3"		// fire rate is 200 rpm
 	"spread"					".2"
 
 //	"def_projectile"			"projectile_blaster"
-	"def_hitscan"				"hitscan_blaster"
-	"def_altprojectile"			"projectile_blaster_charged"
+//	"def_hitscan"				"hitscan_blaster"	this should use bullets
+	"def_hitscan"			"hitscan_bullet_blaster"	// custom bullet, defined below
+//	"def_altprojectile"			"projectile_blaster_charged"	// shouldn't use this
+	"def_althitscan"			"hitscan_bullet_blaster"
 	"ammoType"					"ammo_blaster"
 	"clipSize"					"0"
 	"ammoRequired"				"0"
@@ -164,6 +166,44 @@ entityDef weapon_blaster
 	"net_syncPhysics"			"1"
 }
 
+// custom bullet with custom damage
+entityDef hitscan_bullet_blaster
+{
+	"range"						"40000"
+
+	"fx_impact"				"effects/weapons/machinegun/impact_default.fx"
+	"fx_impact_water"			"effects/ambient/splash_smll.fx"
+	"fx_impact_concrete"			"effects/weapons/machinegun/impact_concrete.fx"
+	"fx_impact_rock"			"effects/weapons/machinegun/impact_concrete.fx"
+	"fx_impact_electronics"			"effects/weapons/machinegun/impact_electronics.fx"
+	"fx_impact_flesh"			"effects/weapons/machinegun/impact_flesh.fx"						
+	"fx_impact_glass"			"effects/weapons/machinegun/impact_glass.fx"
+	"fx_impact_monstermetal"		"effects/weapons/machinegun/impact_monstermetal.fx"
+	"fx_impact_bpglass"			"effects/weapons/machinegun/impact_bpglass.fx"
+	"fx_impact_mp"				"effects/weapons/machinegun/impact_default_mp.fx"
+	"fx_impact_concrete_mp"			"effects/weapons/machinegun/impact_default_mp.fx"
+	"fx_impact_rock_mp"			"effects/weapons/machinegun/impact_default_mp.fx"
+	"fx_impact_glass_mp"			"effects/weapons/machinegun/impact_default_mp.fx"
+	"fx_impact_bpglass_mp"			"effects/weapons/machinegun/impact_default_mp.fx"
+	"fx_impact_electronics_mp"		"effects/weapons/machinegun/impact_default_mp.fx"
+	
+	"def_damage"				"damage_bullet_blaster"	// use custom damage
+	//"def_damage_flesh"			"damage_machinegun_flesh"	don't need this, only 1 type of damage
+		
+	"push"						"7500"
+}
+
+entityDef damage_bullet_blaster
+{
+	"inherit"					"damage_bullet"
+	"damage"					"20"	// slightly higher damage, up from default 15
+	"damage_flesh"				"20"
+
+	"deathPush"					"100"
+	"deathPushMin"				"3000 350"
+	"deathPushMax"				"5000 500"
+}
+
 //--------------------------------------------------------------------------------------------------------------------
 // Models
 //-------------------------------------------------------------------------------------------------------------------0
@@ -185,13 +225,15 @@ model weapon_blaster_view
 
 	anim fire1 					models/weapons/blaster/fire.md5anim
 	{
-		frame 1					sound_weapon	weapon_blaster_fire
-		frame 1					sound_item		weapon_blaster_fire_stereo
+		// make this sound like a gun instead of a sci-fi blaster
+		frame 1					sound_weapon	weapon_machinegun_fire
+		frame 1					sound_item	weapon_machinegun_fire_stereo
 	}
 	anim fire2 					models/weapons/blaster/fire2.md5anim
 	{
-		frame 1					sound_weapon	weapon_blaster_fire
-		frame 1					sound_item		weapon_blaster_fire_stereo
+		// make this sound like a gun instead of a sci-fi blaster
+		frame 1					sound_weapon	weapon_machinegun_fire
+		frame 1					sound_item	weapon_machinegun_fire_stereo
 	}
 
 	anim flashlight				models/weapons/blaster/flashlight.md5anim
@@ -202,8 +244,9 @@ model weapon_blaster_view
 	anim charging				models/weapons/blaster/charge_up.md5anim
 	anim chargedfire			models/weapons/blaster/big_recoil.md5anim
 	{
-		frame 1					sound_weapon	weapon_blaster_fire_charged
-		frame 1					sound_item		weapon_blaster_fire_stereo
+		// make this sound like a gun instead of a sci-fi blaster
+		frame 1					sound_weapon	weapon_machinegun_fire
+		frame 1					sound_item	weapon_machinegun_fire_stereo
 	}
 }
 
