@@ -66,7 +66,8 @@ entityDef weapon_hyperblaster
   	"model_world"				"weapon_hyperblaster_world"
 	"model"						"models/weapons/hyperblaster/w_hb.lwo"
 	"def_dropItem"				"weapon_hyperblaster"
-	"def_projectile"			"projectile_hyperblaster"
+	//"def_projectile"			"projectile_hyperblaster"
+	"def_hitscan"			"hitscan_tau"	// custom hitscan, defined below
 
 	"joint_attach"				"HB_ATTACHER"
 	"joint_view_guiLight"		"body"
@@ -92,7 +93,7 @@ entityDef weapon_hyperblaster
 	"inv_start_ammo_hyperblaster"		"60"
 	"ammoRegenStep"				"5"
 	"ammoRegenTime"				"1500"
-	"clipSize"					"60"									// large for smooth regen
+	"clipSize"					"50"	// original tau cannon has 100 ammo, but 2 ammo/shot									// large for smooth regen
 	"ammoRequired"				"1"										// ammo is handled in the script file
 	"gui"						"guis/weapons/hyperblaster_ammo.gui"
 	"mtr_icon"					"gfx/guis/hud/icons/gun_hyperblaster"
@@ -178,6 +179,58 @@ entityDef moveable_item_hyperblaster
 	"density"					"0.05"
 	"friction"					"0.2"
 	"bouncyness"				"0"
+}
+
+// custom hitscan, based on railgun
+entityDef hitscan_tau
+{
+	"range"						"40000"
+
+	"push"						"40000"
+	
+	"def_damage"				"damage_tau"
+		
+	"fx_impact"				"effects/weapons/railgun/impact_default.fx"
+	"fx_impact_water"			"effects/ambient/splash_med.fx"
+	"fx_path"				"effects/weapons/railgun/trail.fx"
+	"fx_impact_bpglass"			"effects/weapons/railgun/impact_bpglass.fx"
+	"fx_impact_glass"			"effects/weapons/railgun/impact_glass.fx"
+	"fx_impact_concrete"			"effects/weapons/railgun/impact_concrete.fx"
+	"fx_impact_rock"			"effects/weapons/railgun/impact_concrete.fx"	
+	"fx_impact_electronics"			"effects/weapons/railgun/impact_electronics.fx"
+	"fx_impact_flesh"			"effects/weapons/railgun/impact_flesh.fx"
+	"fx_impact_monstermetal"		"effects/weapons/railgun/impact_flesh.fx"
+	"fx_impact_mp"				"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_concrete_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_rock_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_glass_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_bpglass_mp"			"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_impact_electronics_mp"		"effects/weapons/railgun/impact_default_mp.fx"
+	"fx_path_mp"				"effects/weapons/railgun/trail_mp.fx"	
+	"fxOriginOffset"			"0 -15 10"
+}
+
+// custom damage
+entityDef damage_tau 
+{
+	"damage"					"20"	// much lower damage than rail gun
+	"push"						"500"
+	"knockback"					"100"
+	"gib"						"1"
+
+	"dv_time"					"500"
+	"dv_scale"					".1"
+
+	"fx_wound"					"effects/wounds/energy.fx"
+
+//	"deathPush"					"200"
+	"deathPush"					"400"
+	"deathPushMin"				"4000 400"
+	"deathPushMax"				"7000 500"
+	
+	"bleed"						"1"
+
+	"pain"						"concussive"
 }
 
 //--------------------------------------------------------------------------------------------------------------------

@@ -58,6 +58,9 @@ void rvWeaponHyperblaster::Spawn ( void ) {
 	spinning		 = false;
 	
 	SetState ( "Raise", 0 );	
+
+	// set to hitscan
+	wfl.attackHitscan = true;
 }
 
 /*
