@@ -41,15 +41,9 @@ Weapon specifics
 -- Fire at a creature to see that the damage is much lower than that of the default railgun.
 -- UPGRADE:
 
-- Grenade launcher
--- TODO
-
 - Nailgun
 -- Fire to see that that ammo now regenerates (up to the default clip size of 8)
 -- UPGRADE: fire to see that the fire rate is much higher, as is the ammo regeneration rate
-
-- Rocket Launcher
--- TODO
 
 - Railgun
 -- Hold right click to see the slowed-down zoom animation and no-overlay zoom, similar to the HL crossbow.
@@ -68,9 +62,6 @@ Weapon specifics
 -- Right click while holding item to release it without throwing it
 -- UPGRADE: the gun can now pick up monsters in addition to items. Spawn a monster in using "spawn monster_{name}", e.g. "monster_grunt". It can now be picked up and thrown like an item.
 -- Power is increased with upgrade, so the item from before should go further when thrown.
-
-- Napalm
--- TODO
 
 Power up specifics
 
@@ -165,3 +156,5 @@ Power up specifics
 #### Misc
 
 - Added console command to upgrade all weapons at once ("upgradeWeapons") 
+
+- Removed napalm gun, rocket launcher, and grenade launcher
