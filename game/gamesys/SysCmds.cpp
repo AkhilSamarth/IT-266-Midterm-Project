@@ -51,6 +51,8 @@ void Cmd_Upgrade_Weapons(const idCmdArgs& args) {
 	gameLocal.GetLocalPlayer()->isBlasterUpgraded = true;
 	gameLocal.GetLocalPlayer()->isHyperUpgraded = true;
 	gameLocal.GetLocalPlayer()->isLightningUpgraded = true;
+	
+	gameLocal.GetLocalPlayer()->GiveObjective("Upgrade complete!", "Your weapons have now been upgraded.", "");
 }
 
 /*

@@ -759,7 +759,7 @@ windowDef Desktop
 			visible	1
 			windowDef logoText
 			{
-				rect	38,107,512,74
+				rect	69,64,512,74
 				visible	1
 				forecolor	1,1,1,0.9
 				text	"Quake Life 3"
@@ -775,7 +775,7 @@ windowDef Desktop
 			}
 			windowDef main_b1
 			{
-				rect	0,202,413,52
+				rect	139,232,413,52
 				visible	1
 				background	"gfx/guis/mainmenu/b1_dark"
 				matcolor	1,1,1,0.4
@@ -783,20 +783,20 @@ windowDef Desktop
 			windowDef main_b2
 			{
 				rect	-1,232,413,52
-				visible	1
+				visible	0
 				background	"gfx/guis/mainmenu/b1_dark"
 				matcolor	1,1,1,0.4
 			}
 			windowDef main_b3
 			{
 				rect	-1,262,413,52
-				visible	1
+				visible	0
 				background	"gfx/guis/mainmenu/b1_dark"
 				matcolor	1,1,1,0.4
 			}
 			windowDef main_b4
 			{
-				rect	-1,292,413,52
+				rect	139,276,413,52
 				visible	1
 				background	"gfx/guis/mainmenu/b1_dark"
 				matcolor	1,1,1,0.4
@@ -810,7 +810,7 @@ windowDef Desktop
 			}
 			windowDef main_b1_corner
 			{
-				rect	32,221,12,12
+				rect	171,251,12,12
 				visible	1
 				background	"gfx/guis/mainmenu/corner"
 				matcolor	0.564,0.603,0.286,0.4
@@ -818,20 +818,20 @@ windowDef Desktop
 			windowDef main_b2_corner
 			{
 				rect	32,251,12,12
-				visible	1
+				visible	0
 				background	"gfx/guis/mainmenu/corner"
 				matcolor	0.564,0.603,0.286,0.4
 			}
 			windowDef main_b3_corner
 			{
 				rect	32,281,12,12
-				visible	1
+				visible	0
 				background	"gfx/guis/mainmenu/corner"
 				matcolor	0.564,0.603,0.286,0.4
 			}
 			windowDef main_b4_corner
 			{
-				rect	32,311,12,12
+				rect	172,295,12,12
 				visible	1
 				background	"gfx/guis/mainmenu/corner"
 				matcolor	0.564,0.603,0.286,0.4
@@ -845,7 +845,7 @@ windowDef Desktop
 			}
 			windowDef main_t_b1
 			{
-				rect	44,214,314,23
+				rect	252,244,314,23
 				visible	1
 				forecolor	1,1,1,0.8
 				text	"#str_200000"
@@ -855,7 +855,7 @@ windowDef Desktop
 			windowDef main_t_b2
 			{
 				rect	44,244,314,23
-				visible	1
+				visible	0
 				forecolor	1,1,1,0.8
 				text	"#str_200001"
 				textscale	.33
@@ -864,7 +864,7 @@ windowDef Desktop
 			windowDef main_t_b3
 			{
 				rect	44,274,314,23
-				visible	1
+				visible	0
 				forecolor	1,1,1,0.8
 				text	"#str_200002"
 				textscale	.33
@@ -872,7 +872,7 @@ windowDef Desktop
 			}
 			windowDef main_t_b4
 			{
-				rect	44,304,314,23
+				rect	263,288,314,23
 				visible	1
 				forecolor	1,1,1,0.8
 				text	"#str_200009"
@@ -19059,7 +19059,7 @@ windowDef Desktop
 		}
 		windowDef main_b_newgame
 		{
-			rect	24,214,333,26
+			rect	156,243,333,26
 			visible	1
 
 			onMouseEnter {
@@ -19137,51 +19137,6 @@ windowDef Desktop
 				set "save_b1::matcolor_w" "0.4";
 				set "save_t_b1::forecolor" "$desktop::white_8" ; 
 				set "save_t_b1::textscale" "0.31" ;
-				
-				set "cmd" "play main_menu_selection" ;
-			}
-
-		}
-		windowDef main_b_loadgame
-		{
-			rect	24,244,333,26
-			visible	1
-
-			onMouseEnter {
-				if ("desktop::active" == 0) {
-					stoptransitions "main_b_loadgame" ;
-					
-					set "main_b2::matcolor_w" "0.8" ;
-					transition "main_t_b2::forecolor" "$desktop::white_8" "$desktop::orange" "0" ; 
-					transition "main_b2_corner::matcolor" "$desktop::corner" "$desktop::orange" "0" ; 
-					
-					set "main_t_b2::textscale" "0.34" ; 
-					
-					set "cmd" "play main_menu_mouseover" ;
-				}
-			}
-
-			onMouseExit {
-				if ("desktop::active" == 0) {
-					transition "main_b2::matcolor_w" "0.8" "0.4" "300" ;
-					transition "main_t_b2::forecolor"  "$desktop::orange" "$desktop::white_8" "300" ; 
-					transition "main_b2_corner::matcolor"  "$desktop::orange" "$desktop::corner" "300" ;
-					
-					transition "main_t_b2::textscale" "0.34" "0.33" "300" ;
-				} 
-			}
-
-			onAction {
-				set "desktop::active" "1" ;
-				resettime "anim_mainOut" "0" ;
-				set "desktop::dest" "2" ;
-				
-				set "load_b1::matcolor_w" "0.4";
-				set "load_t_b1::forecolor" "$desktop::white_8" ; 
-				set "load_t_b1::textscale" "0.31" ;
-				set "load_b2::matcolor_w" "0.4" ;
-				set "load_t_b2::forecolor" "$desktop::white_8" ; 
-				set "load_t_b2::textscale" "0.31" ;
 				
 				set "cmd" "play main_menu_selection" ;
 			}
@@ -19267,47 +19222,9 @@ windowDef Desktop
 			}
 
 		}
-		windowDef main_b_multiplayer
-		{
-			rect	24,274,333,26
-			visible	1
-
-			onMouseEnter {
-				if ("desktop::active" == 0) {
-					stoptransitions "main_b_multiplayer" ;
-					
-					set "main_b3::matcolor_w" "0.8" ;
-					transition "main_t_b3::forecolor" "$desktop::white_8" "$desktop::orange" "0" ; 
-					transition "main_b3_corner::matcolor" "$desktop::corner" "$desktop::orange" "0" ; 
-					
-					set "main_t_b3::textscale" "0.34" ; 
-					
-					set "cmd" "play main_menu_mouseover" ;
-				}
-			}
-
-			onMouseExit {
-				if ("desktop::active" == 0) {
-					transition "main_b3::matcolor_w" "0.8" "0.4" "300" ;
-					transition "main_t_b3::forecolor"  "$desktop::orange" "$desktop::white_8" "300" ; 
-					transition "main_b3_corner::matcolor"  "$desktop::orange" "$desktop::corner" "300" ; 
-					
-					transition "main_t_b3::textscale" "0.34" "0.33" "300" ;
-				}
-			}
-
-			onAction {
-				set "desktop::active" "1" ;
-				resettime "anim_mainOut" "0" ;
-				set "desktop::dest" "3" ;
-				
-				set "cmd" "play main_menu_selection" ;
-			}
-
-		}
 		windowDef main_b_settings
 		{
-			rect	24,304,333,26
+			rect	152,286,333,26
 			visible	1
 
 			onMouseEnter {
