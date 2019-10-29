@@ -54,7 +54,7 @@ void Cmd_Upgrade_Weapons(const idCmdArgs& args) {
 	gameLocal.GetLocalPlayer()->isMachinegunUpgraded = true;
 	gameLocal.GetLocalPlayer()->isShotgunUpgraded = true;
 	
-	gameLocal.GetLocalPlayer()->GiveObjective("Upgrade complete!", "Your weapons have now been upgraded.", "");
+	gameLocal.GetLocalPlayer()->GiveObjective("Upgrade complete!", "Your weapons have now been upgraded.", "gfx/objectives/upgraded.tga");
 }
 
 /*

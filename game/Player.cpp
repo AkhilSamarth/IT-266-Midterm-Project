@@ -9291,7 +9291,7 @@ void idPlayer::LoadDeferredModel( void ) {
 }
 
 // how much time power up should be active for in seconds
-const int powerUpActiveTime = 5;
+const int powerUpActiveTime = 10;
 
 // methods for giving the player power ups
 bool idPlayer::givePowerJump() {
@@ -9322,6 +9322,9 @@ bool idPlayer::givePowerHaste() {
 	}
 
 	powerUpTimer = gameLocal.time;
+
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_MARINEFLAG, powerUpActiveTime * 1000);
 
 	// set boolean
 	isHasteActive = true;

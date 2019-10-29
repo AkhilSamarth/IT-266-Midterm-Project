@@ -14,6 +14,7 @@ public:
 	rvWeaponShotgun ( void );
 
 	virtual void			Spawn				( void );
+	virtual void Think();
 	void					Save				( idSaveGame *savefile ) const;
 	void					Restore				( idRestoreGame *savefile );
 	void					PreSave				( void );
@@ -27,6 +28,10 @@ private:
 	stateResult_t		State_Idle		( const stateParms_t& parms );
 	stateResult_t		State_Fire		( const stateParms_t& parms );
 	stateResult_t		State_Reload	( const stateParms_t& parms );
+
+	// upgrades
+	bool isUpgraded = false;
+	void upgrade();
 	
 	CLASS_STATES_PROTOTYPE( rvWeaponShotgun );
 };
@@ -48,7 +53,8 @@ rvWeaponShotgun::Spawn
 ================
 */
 void rvWeaponShotgun::Spawn( void ) {
-	hitscans   = spawnArgs.GetFloat( "hitscans" );
+	// account for upgrades
+	hitscans   = spawnArgs.GetFloat( "hitscans" ) * (isUpgraded ? 5 : 1);
 	
 	SetState( "Raise", 0 );	
 }
@@ -86,6 +92,23 @@ rvWeaponShotgun::PostSave
 void rvWeaponShotgun::PostSave ( void ) {
 }
 
+void rvWeaponShotgun::upgrade() {
+	isUpgraded = true;
+
+	// double spread, but add many more hits
+	hitscans = spawnArgs.GetFloat("hitscans") * 5;
+	spread *= 2;
+}
+
+void rvWeaponShotgun::Think() {
+	// let the weapon think first
+	rvWeapon::Think();
+
+	// check for upgrades
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isShotgunUpgraded) {
+		upgrade();
+	}
+}
 
 /*
 ===============================================================================
