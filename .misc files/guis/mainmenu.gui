@@ -782,8 +782,8 @@ windowDef Desktop
 			}
 			windowDef main_b2
 			{
-				rect	-1,232,413,52
-				visible	0
+				rect	139,264,413,52
+				visible	1
 				background	"gfx/guis/mainmenu/b1_dark"
 				matcolor	1,1,1,0.4
 			}
@@ -796,14 +796,14 @@ windowDef Desktop
 			}
 			windowDef main_b4
 			{
-				rect	139,276,413,52
+				rect	139,296,413,52
 				visible	1
 				background	"gfx/guis/mainmenu/b1_dark"
 				matcolor	1,1,1,0.4
 			}
 			windowDef main_b9
 			{
-				rect	0,322,413,52
+				rect	140,327,413,52
 				visible	1
 				background	"gfx/guis/mainmenu/b1_dark"
 				matcolor	1,1,1,0
@@ -817,8 +817,8 @@ windowDef Desktop
 			}
 			windowDef main_b2_corner
 			{
-				rect	32,251,12,12
-				visible	0
+				rect	172,283,12,12
+				visible	1
 				background	"gfx/guis/mainmenu/corner"
 				matcolor	0.564,0.603,0.286,0.4
 			}
@@ -831,14 +831,14 @@ windowDef Desktop
 			}
 			windowDef main_b4_corner
 			{
-				rect	172,295,12,12
+				rect	172,315,12,12
 				visible	1
 				background	"gfx/guis/mainmenu/corner"
 				matcolor	0.564,0.603,0.286,0.4
 			}
 			windowDef main_b9_corner
 			{
-				rect	32,341,12,12
+				rect	172,346,12,12
 				visible	1
 				background	"gfx/guis/mainmenu/corner"
 				matcolor	0.564,0.603,0.286,0
@@ -854,8 +854,8 @@ windowDef Desktop
 			}
 			windowDef main_t_b2
 			{
-				rect	44,244,314,23
-				visible	0
+				rect	253,276,314,23
+				visible	1
 				forecolor	1,1,1,0.8
 				text	"#str_200001"
 				textscale	.33
@@ -872,7 +872,7 @@ windowDef Desktop
 			}
 			windowDef main_t_b4
 			{
-				rect	263,288,314,23
+				rect	263,308,314,23
 				visible	1
 				forecolor	1,1,1,0.8
 				text	"#str_200009"
@@ -881,7 +881,7 @@ windowDef Desktop
 			}
 			windowDef main_t_b9
 			{
-				rect	44,334,314,23
+				rect	229,339,314,23
 				visible	1
 				forecolor	1,1,1,0
 				text	"#str_200005"
@@ -19021,6 +19021,51 @@ windowDef Desktop
 			set "pop_b_set_sndadv_close::visible" "0" ;
 		}
 
+		windowDef main_b_loadgame
+		{
+			rect	154,275,333,26
+			visible	1
+
+			onMouseEnter {
+				if ("desktop::active" == 0) {
+					stoptransitions "main_b_loadgame" ;
+					
+					set "main_b2::matcolor_w" "0.8" ;
+					transition "main_t_b2::forecolor" "$desktop::white_8" "$desktop::orange" "0" ; 
+					transition "main_b2_corner::matcolor" "$desktop::corner" "$desktop::orange" "0" ; 
+					
+					set "main_t_b2::textscale" "0.34" ; 
+					
+					set "cmd" "play main_menu_mouseover" ;
+				}
+			}
+
+			onMouseExit {
+				if ("desktop::active" == 0) {
+					transition "main_b2::matcolor_w" "0.8" "0.4" "300" ;
+					transition "main_t_b2::forecolor"  "$desktop::orange" "$desktop::white_8" "300" ; 
+					transition "main_b2_corner::matcolor"  "$desktop::orange" "$desktop::corner" "300" ;
+					
+					transition "main_t_b2::textscale" "0.34" "0.33" "300" ;
+				} 
+			}
+
+			onAction {
+				set "desktop::active" "1" ;
+				resettime "anim_mainOut" "0" ;
+				set "desktop::dest" "2" ;
+				
+				set "load_b1::matcolor_w" "0.4";
+				set "load_t_b1::forecolor" "$desktop::white_8" ; 
+				set "load_t_b1::textscale" "0.31" ;
+				set "load_b2::matcolor_w" "0.4" ;
+				set "load_t_b2::forecolor" "$desktop::white_8" ; 
+				set "load_t_b2::textscale" "0.31" ;
+				
+				set "cmd" "play main_menu_selection" ;
+			}
+
+		}
 		windowDef main_b_returnmp
 		{
 			rect	24,214,333,26
@@ -19091,10 +19136,7 @@ windowDef Desktop
 				resettime "anim_mainOut" "0" ;
 				set "desktop::dest" "1" ;
 				
-				set "new_bstart::matcolor_w" "0.4" ;
-				set "new_t_bstart::forecolor" "$desktop::white_8" ; 
-				set "new_bstart_corner::matcolor" "$desktop::corner" ; 
-				set "new_t_bstart::textscale" "0.33" ;
+				consoleCMD "map mp/q4ctf1.map" ;
 				
 				set "cmd" "play main_menu_selection" ;
 			}
@@ -19102,7 +19144,7 @@ windowDef Desktop
 		}
 		windowDef main_b_savegame
 		{
-			rect	24,214,333,26
+			rect	157,243,333,26
 			visible	0
 
 			onMouseEnter {
@@ -19182,49 +19224,9 @@ windowDef Desktop
 			}
 
 		}
-		windowDef main_b_quitcurrent
-		{
-			rect	24,274,333,26
-			visible	0
-
-			onMouseEnter {
-				if ("desktop::active" == 0) {
-					stoptransitions "main_b_quitcurrent" ;
-					
-					set "main_b3::matcolor_w" "0.8" ;
-					transition "main_t_b3::forecolor" "$desktop::white_8" "$desktop::orange" "0" ; 
-					transition "main_b3_corner::matcolor" "$desktop::corner" "$desktop::orange" "0" ; 
-					
-					set "main_t_b3::textscale" "0.34" ; 
-					
-					set "cmd" "play main_menu_mouseover" ;
-				}
-			}
-
-			onMouseExit {
-				if ("desktop::active" == 0) {
-					transition "main_b3::matcolor_w" "0.8" "0.4" "300" ;
-					transition "main_t_b3::forecolor"  "$desktop::orange" "$desktop::white_8" "300" ; 
-					transition "main_b3_corner::matcolor"  "$desktop::orange" "$desktop::corner" "300" ; 
-					
-					transition "main_t_b3::textscale" "0.34" "0.33" "300" ;
-				}
-			}
-
-			onAction {
-				set "pop_disc_title::text" "#str_200004" ;
-				set "pop_disc_text::text" "#str_200174" ;
-				
-				set "desktop::active" "1" ;
-				resettime "anim_pop_discIn" "0" ;
-				
-				set "cmd" "play main_menu_selection" ;
-			}
-
-		}
 		windowDef main_b_settings
 		{
-			rect	152,286,333,26
+			rect	154,307,333,26
 			visible	1
 
 			onMouseEnter {
@@ -19262,7 +19264,7 @@ windowDef Desktop
 		}
 		windowDef main_b_return
 		{
-			rect	24,334,333,26
+			rect	154,341,333,26
 			visible	0
 
 			onMouseEnter {
