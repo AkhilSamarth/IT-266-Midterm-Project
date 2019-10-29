@@ -95,9 +95,13 @@ entityDef weapon_machinegun
 	"fireRate"					".1"
 	"spread"					"2"
 
+	// fire rate for grenades, 1 every 2 seconds
+	"altFireRate"				"2"
+
 	"mtr_crosshair"				"gfx/guis/crosshairs/crosshair_machinegun"
 	"def_hitscan"				"hitscan_bullet"
-	"def_althitscan"			"hitscan_zoomed_bullet"
+	//"def_althitscan"			"hitscan_zoomed_bullet"	// alt attack should be grenade
+	"def_altprojectile"			"projectile_grenade"
 	
 	"ammoType"					"ammo_machinegun"
 	"ammoRequired"				"1"

@@ -317,6 +317,8 @@ public:
 	bool isBlasterUpgraded = false;
 	bool isHyperUpgraded = false;
 	bool isLightningUpgraded = false;
+	bool isMachinegunUpgraded = false;
+	bool isShotgunUpgraded = false;
 
 	struct playerFlags_s {
 		bool		forward			:1;
