@@ -308,6 +308,7 @@ public:
 	float					jumpHeight;			// float to keep track of jumpheight without losing original
 	bool					isAmmoActive;		// whether or not the ammo powerup is active
 	bool					isShieldActive;		// whether or not the shield powerup is active
+	bool					isHasteActive;		// whether or not the haste powerup is active
 
 	// booleans for weapon upgrade
 	bool isNailgunUpgraded = false;

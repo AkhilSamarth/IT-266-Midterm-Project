@@ -1081,6 +1081,11 @@ idPlayer::idPlayer() {
 
 	alreadyDidTeamAnnouncerSound = false;
 
+	// initialize bools for powerups
+	isHasteActive = false;
+	isAmmoActive = false;
+	isShieldActive = false;
+
 	doInitWeapon			= false;
 	noclip					= false;
 	godmode					= false;
@@ -8750,7 +8755,11 @@ void idPlayer::AdjustSpeed( void ) {
 	} else if ( noclip ) {
 		speed = pm_noclipspeed.GetFloat();
 		bobFrac = 0.0f;
- 	} else if ( !physicsObj.OnLadder() && ( usercmd.buttons & BUTTON_RUN ) && ( usercmd.forwardmove || usercmd.rightmove ) && ( usercmd.upmove >= 0 ) ) {
+	} else if (isHasteActive) {
+		// increase speed for powerup
+		speed = pm_walkspeed.GetFloat() * 4;
+		bobFrac = 0.0f;
+	} else if (!physicsObj.OnLadder() && (usercmd.buttons & BUTTON_RUN) && (usercmd.forwardmove || usercmd.rightmove) && (usercmd.upmove >= 0)) {
 		bobFrac = 1.0f;
 		speed = pm_speed.GetFloat();
 	} else {
@@ -9314,8 +9323,9 @@ bool idPlayer::givePowerHaste() {
 
 	powerUpTimer = gameLocal.time;
 
-	// use Quake's built in haste power up for this
-	GivePowerUp(POWERUP_HASTE, powerUpActiveTime * 1000);
+	// set boolean
+	isHasteActive = true;
+	AdjustSpeed();
 	
 	gameLocal.Printf("Speed started\n");
 	return true;
@@ -9381,7 +9391,11 @@ void idPlayer::clearPowers() {
 	jumpHeight = pm_jumpheight.GetFloat();
 	pfl.noFallingDamage = false;
 
-	// reset speed and strength
+	// reset haste
+	isHasteActive = false;
+	AdjustSpeed();
+
+	// reset strength
 	ClearPowerUps();
 
 	// reset shield
