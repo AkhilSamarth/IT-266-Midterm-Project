@@ -1,4 +1,5 @@
-## Half Life inspired Quake 4 Mod for IT 266, by Akhil Samarth
+# Quake Life 3 #
+## Half Life inspired Quake 4 Mod for IT 266, by Akhil Samarth ##
 
 ## Description: 
 This mod adds several features inspired by the Half Life series, as well as a few additional things. The instructions on how to test this mod as well as a full list of changes can be found below.
@@ -158,3 +159,5 @@ Power up specifics
 - Added console command to upgrade all weapons at once ("upgradeWeapons") 
 
 - Removed napalm gun, rocket launcher, and grenade launcher
+
+- Changed menu GUIs.
