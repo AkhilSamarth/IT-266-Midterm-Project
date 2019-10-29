@@ -9296,8 +9296,11 @@ bool idPlayer::givePowerJump() {
 	// give flag "powerup" for graphic purposes
 	GivePowerUp(POWERUP_CTF_MARINEFLAG, powerUpActiveTime * 1000);
 
-	// set jump height to twice the normal
-	jumpHeight = pm_jumpheight.GetFloat() * 2;
+	// set jump height to quadruple the normal
+	jumpHeight = pm_jumpheight.GetFloat() * 4;
+
+	// disable fall damage
+	pfl.noFallingDamage = true;
 
 	gameLocal.Printf("Jump started\n");
 	return true;
@@ -9376,6 +9379,7 @@ void idPlayer::clearPowers() {
 
 	// reset jump
 	jumpHeight = pm_jumpheight.GetFloat();
+	pfl.noFallingDamage = false;
 
 	// reset speed and strength
 	ClearPowerUps();
