@@ -160,4 +160,4 @@ Power up specifics
 
 - Removed napalm gun, rocket launcher, and grenade launcher
 
-- Changed menu GUIs.
+- Changed menu GUIs
