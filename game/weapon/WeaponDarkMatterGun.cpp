@@ -167,15 +167,16 @@ void rvWeaponDarkMatterGun::Think() {
 			// get a pointer to the entity this trace hit
 			entity = gameLocal.FindEntity(trace.c.entityNum);
 
-			// only pick up items unless upgraded
+			// only pick up certain types of things
 			idStr& name = entity->name;
+			gameLocal.Printf("name of ent: %s\n", name.c_str());
 			if (isUpgraded) {
-				if ((name.Cmpn("idItem", 6) != 0) && (name.Cmpn("rvMonster", 9) != 0)) {
+				if (name.Cmpn("idItem", 6) && name.Cmpn("item", 4) && name.Cmpn("ammo", 4) && name.Cmpn("weapon", 6) && name.Cmpn("powerup", 7) && name.Cmpn("rvMonster", 9)) {
 					return;
 				}
 			}
 			else {
-				if (name.Cmpn("idItem", 6) != 0) {
+				if (name.Cmpn("idItem", 6) && name.Cmpn("item", 4) && name.Cmpn("ammo", 4) && name.Cmpn("weapon", 6) && name.Cmpn("powerup", 7)) {
 					return;
 				}
 			}
