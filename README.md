@@ -8,82 +8,20 @@ This mod adds several features inspired by the Half Life series, as well as a fe
 
 Main Instructions
 
-- Click "Start game" in main menu to load into map
+- Click "Start game" in the main menu to load into the map
 
-- Weapons upgrades: all weapons can be upgraded using command "upgradeWeapons"
+- Weapons and ammo will be there by default (see "Changes" below for more details on each weapon)
+
+- Weapons upgrades: all weapons can be upgraded at once using command "upgradeWeapons"
 -- NOTE: weapons cannot be downgraded, so don't run this command until you are done with the default weapons
--- See the "UPGRADE" notes under "weapon specifics" for more details on the specifics of each upgraded weapon
+-- See upgrade notes under weapon changes for more details on the specifics of each upgraded weapon
 
 - Power ups: spawn each power up item using the command "spawn item_powerup_{name}"
 -- {name} is one of "jump", "haste", "strength", "shield", or "ammo"
 -- Walk over power up to gain its effect (only one can be picked up at a time)
--- See "power up specifics" for more details on each power up
+-- See "Changes" below for more details
 
 - Creatures: spawn Alien Grunt using command "spawn monster_gunner"
-
-Weapon specifics
-
-- Blaster
--- Fire the weapon to see that it fires bullets instead of the original blaster particle. It also plays a bullet sound.
--- Hold left click to see that the charged attack has been removed.
--- UPGRADE: Firing rate is considerably higher
-
-- Machine gun
--- Alt-fire grenades by holding down right click before firing
--- UPGRADE: Grenade fire rate is increased
-
-- Shotgun
--- Works normally without upgrade
--- UPGRADE: Spread is slightly higher and many more hitscans (50 instead of 10)
-
-- Hyperblaster
--- Fire to see that the the original hyperblaster particles have been replaced with those of the rail gun.
--- Fire at a creature to see that the damage is much lower than that of the default railgun.
--- UPGRADE: Increased fire rate
-
-- Nailgun
--- Fire to see that that ammo now regenerates (up to the default clip size of 8)
--- UPGRADE: Ammo regen rate, clip size, and fire rate are all increased
-
-- Railgun
--- Hold right click to see the slowed-down zoom animation and no-overlay zoom, similar to the HL crossbow.
--- Fire to see that the original hitscan has been replaced with a high-damage crossbow bolt projectile.
--- Fire at a creature to see that the very high damage done by a single bolt.
--- UPGRADE: Reloads faster
-
-- Lightning
--- Hold the fire button, aimed at the floor, starting aimed close to you and then moving further away, to see the weapon's much more restricted range.
--- UPGRADE: Increased range and lower ammo consumption
-
-- Dark matter
--- Spawn in an item using the command "spawn item_{name}", e.g. "item_health_large"
--- Click on the item and move the mouse around to see that the item has been picked up
--- Left click while holding item to throw it
--- Right click while holding item to release it without throwing it
--- UPGRADE: Gun can now pick up monsters in addition to items and throwing power is increased
-
-Power up specifics
-
-- Jump boost
--- Jump to see that the jump height is higher than default
-
-- Haste
--- Fire a weapon (I suggest the machine gun) to see that its fire rate has been increased
--- Run around to see that the player can now run faster (note: this speed difference isn't very large and may be hard to notice)
-
-- Strength
--- Spawn in a monster using command "spawn monster_{name}", e.g. "monster_grunt"
--- Fire a weapon at it before picking up the power up, keeping track of roughly how many shots it took to kill it
--- Fire the same weapon at the same monster, this time with the power up, to see that only around 1/4 as many shots are needed to kill
-
-- Shield
--- Note, have the shield power up spawned and ready to be picked up prior to proceeding
--- Spawn in a monster using command "spawn monster_{name}", e.g. "monster_grunt"
--- Allow it to hit you and note approximately how much damage it does
--- Consume power up and let the monster hit you to see that it should now be doing much less damage
-
-- Ammo
--- Fire a weapon with this power up to see that no ammo is consumed
 
 ## Changes:
 
@@ -101,6 +39,15 @@ Power up specifics
 -- Removed charged attack
 -- Upgrades to have much faster firing rate
 
+- Machine gun (same):
+-- Removed zooming
+-- Added grenade launching as alt attack (hold right click before firing to use)
+-- Upgrades to have faster grenade launching
+
+- Shotgun (same):
+-- Default weapon is the same as vanilla Quake 4
+-- Upgrades to have higher spread but many more bullets (50 instead of 10)
+
 - Railgun (crossbow)
 -- Removed zoom overlay, similar to the crossbow from HL
 -- Changed hitscan to projectile
@@ -114,8 +61,9 @@ Power up specifics
 -- Upgrades to have much faster fire rate and ammo regen
 
 - Hyperblaster (tau cannon)
--- Changed hitscan to that of railgun, since it looks more similar to the tau cannon from HL
+-- Replaced projectile firing with hitscan
 -- Tweaked clip size, fire rate, etc.
+-- Upgrades to have faster fire rate
 
 - Lightning gun (gluon gun)
 -- Shortened range
@@ -129,9 +77,7 @@ Power up specifics
 -- Allows player to jump significantly higher
 
 - Haste
--- Uses the in-game haste power up
 -- Increases the player's speed
--- Increases the player's firing rate
 
 - Strength
 -- Utilizes the in-game quad damage power up
@@ -159,3 +105,7 @@ Power up specifics
 - Removed napalm gun, rocket launcher, and grenade launcher
 
 - Changed menu GUIs
+
+- Added gui (objective) that shows to indicate weapons have been upgraded
+
+- Changed weapon names UI
