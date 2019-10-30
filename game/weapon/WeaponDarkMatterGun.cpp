@@ -129,7 +129,7 @@ void rvWeaponDarkMatterGun::Think() {
 	// if mouse button clicked and cooldown timer is over, either try to pick up or release object
 	if ((gameLocal.GetLocalPlayer()->usercmd.buttons & BUTTON_ATTACK) && (gameLocal.time - clickTimer >= clickCooldown)) {
 		// if item is being held, throw it
-		if (isHoldingItem) {
+		if (isHoldingItem && entity) {
 			// start timer
 			clickTimer = gameLocal.time;
 
