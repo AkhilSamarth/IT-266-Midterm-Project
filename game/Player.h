@@ -308,6 +308,17 @@ public:
 	float					jumpHeight;			// float to keep track of jumpheight without losing original
 	bool					isAmmoActive;		// whether or not the ammo powerup is active
 	bool					isShieldActive;		// whether or not the shield powerup is active
+	bool					isHasteActive;		// whether or not the haste powerup is active
+
+	// booleans for weapon upgrade
+	bool isNailgunUpgraded = false;
+	bool isRailgunUpgraded = false;
+	bool isDMGUpgraded = false;
+	bool isBlasterUpgraded = false;
+	bool isHyperUpgraded = false;
+	bool isLightningUpgraded = false;
+	bool isMachinegunUpgraded = false;
+	bool isShotgunUpgraded = false;
 
 	struct playerFlags_s {
 		bool		forward			:1;

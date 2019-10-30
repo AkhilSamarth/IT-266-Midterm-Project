@@ -40,6 +40,9 @@ public:
 	void				PreSave					( void );
 	void				PostSave				( void );
 
+	// upgrade weapon
+	void upgrade();
+
 protected:
 
 	idEntityPtr<idEntity>				guideEnt;
@@ -65,6 +68,9 @@ protected:
 	virtual void		OnLaunchProjectile		( idProjectile* proj );
 	
 private:
+	
+	// used to regen ammo
+	int ammoTimer;
 
 	void				UpdateGuideStatus		( float range = 0.0f );
 	void				CancelGuide				( void );	
@@ -83,6 +89,9 @@ private:
 	stateResult_t		Frame_ClaspClose		( const stateParms_t& parms );	
 	
 	CLASS_STATES_PROTOTYPE ( rvWeaponNailgun );
+
+	// whether or not this nailgun is upgraded
+	bool isUpgraded = false;
 };
 
 CLASS_DECLARATION( rvWeapon, rvWeaponNailgun )
@@ -94,6 +103,8 @@ rvWeaponNailgun::rvWeaponNailgun
 ================
 */
 rvWeaponNailgun::rvWeaponNailgun ( void ) {
+	// set ammo regen timer to 0
+	ammoTimer = 0;
 }
 
 /*
@@ -306,6 +317,16 @@ void rvWeaponNailgun::UpdateGuideStatus ( float range ) {
 	}
 }
 
+// the amount of time between ammo regens, in millis
+int regenInterval = 500;
+
+// upgrade weapon
+void rvWeaponNailgun::upgrade() {
+	fireRate = 25;
+	clipSize = 32;
+	regenInterval = 125;
+}
+
 /*
 ================
 rvWeaponNailgun::Think
@@ -318,13 +339,41 @@ void rvWeaponNailgun::Think ( void ) {
 	// Let the real weapon think first
 	rvWeapon::Think ( );
 
+	// check if upgrade is needed
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isNailgunUpgraded) {
+		upgrade();
+		isUpgraded = true;
+	}
+
+	// ammo regen if clip isn't full and not firing
+	if (AmmoInClip() < ClipSize() && !wsfl.attack) {
+		// set timer if it hasn't been set yet
+		if (ammoTimer == 0) {
+			ammoTimer = gameLocal.time;
+		}
+		// regen 1 ammo if required interval has passed 
+		else if (gameLocal.time - ammoTimer >= regenInterval) {
+			// add ammo by "using" negative amount
+			// this is to prevent any ammo from being subtracted
+			UseAmmo(-1);
+
+			// if clip is full, stop timer and set to 0, other reset timer for next iteration
+			if (AmmoInClip() >= ClipSize()) {
+				ammoTimer = 0;
+			}
+			else {
+				ammoTimer = gameLocal.time;
+			}
+		}
+	}
+
 	// If no guide range is set then we dont have the mod yet
 	if ( !guideRange ) {
 		return;
 	}
 
-	// If the zoom button isnt down then dont update the lock
-	if ( !wsfl.zoom || IsReloading ( ) || IsHolstered ( ) ) {
+	// don't worry about whether or not this is zoomed in
+	if (IsReloading ( ) || IsHolstered ( )) {
 		CancelGuide ( );
 		return;
 	}
@@ -614,10 +663,12 @@ stateResult_t rvWeaponNailgun::State_Idle( const stateParms_t& parms ) {
 					return SRESULT_DONE;
 				}  
 				if ( wsfl.attack && AutoReload() && !AmmoInClip ( ) && AmmoAvailable () ) {
+					gameLocal.Printf("nailgun:619 - set state reload 1\n");
 					SetState ( "Reload", 4 );
 					return SRESULT_DONE;			
 				}
 				if ( wsfl.netReload || (wsfl.reload && AmmoInClip() < ClipSize() && AmmoAvailable()>AmmoInClip()) ) {
+					gameLocal.Printf("nailgun:624 - set state reload 2\n");
 					SetState ( "Reload", 4 );
 					return SRESULT_DONE;			
 				}				
@@ -699,7 +750,10 @@ stateResult_t rvWeaponNailgun::State_Fire( const stateParms_t& parms ) {
 			}
 			DrumSpin ( NAILGUN_DRUMSPEED_SLOW, 4 );
 			if ( !wsfl.attack && !AmmoInClip() && AmmoAvailable() && AutoReload ( ) && !wsfl.lowerWeapon ) {
-				PostState ( "Reload", 4 );
+				// do not autoreload, ammo should regen automatically
+				//PostState ( "Reload", 4 );
+
+				PostState("Idle", 4);
 			} else {
 				PostState ( "Idle", 4 );
 			}

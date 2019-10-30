@@ -19,6 +19,9 @@ public:
 	void					PreSave					( void );
 	void					PostSave				( void );
 
+	// add think function
+	virtual void Think();
+
 #ifdef _XENON
 	virtual bool		AllowAutoAim			( void ) const { return false; }
 #endif
@@ -55,6 +58,21 @@ private:
 	stateResult_t		State_Idle		( const stateParms_t& parms );
 	stateResult_t		State_Fire		( const stateParms_t& parms );
 	stateResult_t		State_Reload	( const stateParms_t& parms );
+
+	void upgrade();
+	bool isUpgraded = false;
+
+	// vars for gravity gun
+	const float range = 200;		// range is based on experimentation, 200 seems good
+	float power = 600;			// how powerful the launch is
+	const int clickCooldown = 500;	// minimum time between clicks in millis
+
+	int clickTimer = 0;			// cooldown timer for clicking
+
+	bool isHoldingItem = false;		// whether or not an item is being held currently
+	idEntity* entity;		// entity being held
+	float distance;			// distance from gun that entity is being held
+	idVec3 gravity;			// used to store old gravity before picking up object
 	
 	CLASS_STATES_PROTOTYPE ( rvWeaponDarkMatterGun );
 };
@@ -83,6 +101,116 @@ rvWeaponDarkMatterGun::~rvWeaponDarkMatterGun ( void ) {
 	StopRings ( );
 }
 
+void rvWeaponDarkMatterGun::upgrade() {
+	isUpgraded = true;
+
+	// double power
+	power *= 2;
+}
+
+// custom think function, format copied from other weapons
+void rvWeaponDarkMatterGun::Think() {
+	// trace for checking what to pick up
+	trace_t trace;
+
+	// weapon should think first
+	rvWeapon::Think();
+
+	// check for upgrades
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isDMGUpgraded) {
+		upgrade();
+	}
+
+	// make sure rings aren't there when nothing is being held
+	if (!isHoldingItem) {
+		StopRings();
+	}
+
+	// if mouse button clicked and cooldown timer is over, either try to pick up or release object
+	if ((gameLocal.GetLocalPlayer()->usercmd.buttons & BUTTON_ATTACK) && (gameLocal.time - clickTimer >= clickCooldown)) {
+		// if item is being held, throw it
+		if (isHoldingItem) {
+			// start timer
+			clickTimer = gameLocal.time;
+
+			isHoldingItem = false;
+
+			// restore original gravity
+			entity->GetPhysics()->SetGravity(gravity);
+
+			// launch in direction that player is looking
+			float mass = entity->GetPhysics()->GetMass();
+
+			gameLocal.Printf("mass: %f\n", mass);
+			
+			// take mass into account if it is >= 1
+			entity->GetPhysics()->SetLinearVelocity(playerViewAxis[0] * power / (mass >= 1 ? (mass / 50) : 1));
+
+			// "fire" for noise and animation
+			SetState("Fire", 0);
+
+			return;
+		}
+		else {
+			// try to pick up an object
+			// trace to check for items
+			gameLocal.TracePoint(owner, trace,
+				playerViewOrigin,
+				playerViewOrigin + playerViewAxis[0] * range,
+				MASK_ALL, owner);
+
+			// check if trace hit anything
+			if (trace.fraction == 1) {
+				return;
+			}
+
+			// get a pointer to the entity this trace hit
+			entity = gameLocal.FindEntity(trace.c.entityNum);
+
+			// only pick up certain types of things
+			idStr& name = entity->name;
+			gameLocal.Printf("name of ent: %s\n", name.c_str());
+			if (isUpgraded) {
+				if (name.Cmpn("idItem", 6) && name.Cmpn("item", 4) && name.Cmpn("ammo", 4) && name.Cmpn("weapon", 6) && name.Cmpn("powerup", 7) && name.Cmpn("rvMonster", 9)) {
+					return;
+				}
+			}
+			else {
+				if (name.Cmpn("idItem", 6) && name.Cmpn("item", 4) && name.Cmpn("ammo", 4) && name.Cmpn("weapon", 6) && name.Cmpn("powerup", 7)) {
+					return;
+				}
+			}
+
+			// start timer and rings
+			clickTimer = gameLocal.time;
+			StartRings(false);
+
+			// hold item, disable all thinking for item (store original flags first)
+			isHoldingItem = true;
+			distance = gameLocal.GetLocalPlayer()->DistanceTo(trace.c.point);
+			gravity = entity->GetPhysics()->GetGravity();
+			entity->GetPhysics()->SetGravity(idVec3(0, 0, 0));
+		}
+	}
+	else if (isHoldingItem && (gameLocal.GetLocalPlayer()->usercmd.buttons & BUTTON_ZOOM)) {
+		// if right click while holding item, drop without throwing
+		isHoldingItem = false;
+
+		// restore original thinking and physics (so object can fall, even if it wasn't before)
+		//entity->thinkFlags = thinkFlags;
+		//entity->thinkFlags |= TH_PHYSICS;
+		entity->GetPhysics()->SetGravity(gravity);
+
+		return;
+	}
+
+	// if an item is currently being held by the gun, process it, otherwise check for item pickups
+	if (isHoldingItem) {
+		// translate item to the same distance along the player's view axis that it was picked up from
+		entity->GetPhysics()->SetOrigin(playerViewOrigin + playerViewAxis[0] * distance);
+	}
+}
+
 /*
 ================
 rvWeaponDarkMatterGun::Spawn
@@ -100,6 +228,9 @@ void rvWeaponDarkMatterGun::Spawn ( void ) {
 	chargeDuration = SEC2MS ( spawnArgs.GetFloat ( "chargeDuration", ".5" ) );
 	
 	jointCore = viewModel->GetAnimator()->GetJointHandle ( spawnArgs.GetString ( "joint_core" ) );
+
+	// make this gun hitscan
+	wfl.attackHitscan = true;
 }
 
 /*
@@ -280,10 +411,12 @@ stateResult_t rvWeaponDarkMatterGun::State_Idle( const stateParms_t& parms ) {
 				return SRESULT_DONE;
 			}		
 
+			/* don't fire
 			if ( gameLocal.time > nextAttackTime && wsfl.attack && AmmoInClip ( ) ) {
 				SetState ( "Fire", 0 );
 				return SRESULT_DONE;
-			}  
+			} 
+			*/
 
 			if ( wsfl.netReload ) {
 				if ( owner->entityNumber != gameLocal.localClientNum ) {
@@ -313,7 +446,8 @@ stateResult_t rvWeaponDarkMatterGun::State_Fire ( const stateParms_t& parms ) {
 		case STAGE_INIT:
 			StopRings ( );
 
-			nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
+			// cooldown is managed manually
+			//nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
 			Attack ( false, 1, spread, 0, 1.0f );
 			PlayAnim ( ANIMCHANNEL_ALL, "fire", 0 );	
 			return SRESULT_STAGE ( STAGE_WAIT );

@@ -15,6 +15,7 @@ public:
 	rvWeaponHyperblaster ( void );
 
 	virtual void			Spawn				( void );
+	virtual void Think();	// think function to check for upgrade
 	void					Save				( idSaveGame *savefile ) const;
 	void					Restore				( idRestoreGame *savefile );
 	void					PreSave				( void );
@@ -33,6 +34,10 @@ private:
 	stateResult_t		State_Idle		( const stateParms_t& parms );
 	stateResult_t		State_Fire		( const stateParms_t& parms );
 	stateResult_t		State_Reload	( const stateParms_t& parms );
+
+	// upgrades
+	bool isUpgraded = false;
+	void upgrade();
 	
 	CLASS_STATES_PROTOTYPE ( rvWeaponHyperblaster );
 };
@@ -48,6 +53,22 @@ rvWeaponHyperblaster::rvWeaponHyperblaster
 rvWeaponHyperblaster::rvWeaponHyperblaster ( void ) {
 }
 
+void rvWeaponHyperblaster::upgrade() {
+	// increase fire rate
+	fireRate /= 2;
+}
+
+void rvWeaponHyperblaster::Think() {
+	// let weapon think first
+	rvWeapon::Think();
+
+	// check for upgrade
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isHyperUpgraded) {
+		isUpgraded = true;
+		upgrade();
+	}
+}
+
 /*
 ================
 rvWeaponHyperblaster::Spawn
@@ -58,6 +79,9 @@ void rvWeaponHyperblaster::Spawn ( void ) {
 	spinning		 = false;
 	
 	SetState ( "Raise", 0 );	
+
+	// set to hitscan
+	wfl.attackHitscan = true;
 }
 
 /*

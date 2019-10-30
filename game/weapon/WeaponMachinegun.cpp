@@ -33,6 +33,10 @@ private:
 	stateResult_t		State_Reload		( const stateParms_t& parms );
 	stateResult_t		State_Flashlight	( const stateParms_t& parms );
 
+	// upgrades
+	bool isUpgraded = false;
+	void upgrade();
+
 	CLASS_STATES_PROTOTYPE ( rvWeaponMachinegun );
 };
 
@@ -59,6 +63,15 @@ void rvWeaponMachinegun::Spawn ( void ) {
 	SetState ( "Raise", 0 );	
 	
 	Flashlight ( owner->IsFlashlightOn() );
+
+	// no zoom overlay
+	zoomGui = NULL;
+
+	// don't want zooming, but still set zoom flag so game knows whether or not to use alt attack
+	zoomFov = gameLocal.GetLocalPlayer()->DefaultFov();
+
+	// alt fire should be grenades, when upgraded
+	wfl.attackAltHitscan = false;
 }
 
 /*
@@ -97,6 +110,12 @@ rvWeaponMachinegun::PostSave
 void rvWeaponMachinegun::PostSave ( void ) {
 }
 
+void rvWeaponMachinegun::upgrade() {
+	isUpgraded = true;
+
+	// increase grenade fire rate from once every 0.5 sec
+	altFireRate = 500;
+}
 
 /*
 ================
@@ -106,6 +125,12 @@ rvWeaponMachinegun::Think
 void rvWeaponMachinegun::Think()
 {
 	rvWeapon::Think();
+
+	// check for upgrade
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isMachinegunUpgraded) {
+		upgrade();
+	}
+
 	if ( zoomGui && owner == gameLocal.GetLocalPlayer( ) ) {
 		zoomGui->SetStateFloat( "playerYaw", playerViewAxis.ToAngles().yaw );
 	}
@@ -228,7 +253,7 @@ stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 		case STAGE_INIT:
 			if ( wsfl.zoom ) {
 				nextAttackTime = gameLocal.time + (altFireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
-				Attack ( true, 1, spreadZoom, 0, 1.0f );
+				Attack ( true, 1, spread, 0, 1.0f );
 				fireHeld = true;
 			} else {
 				nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));

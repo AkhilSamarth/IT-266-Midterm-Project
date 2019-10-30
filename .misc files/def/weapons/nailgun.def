@@ -106,11 +106,11 @@ entityDef weapon_nailgun
 
 	"joint_world_flash"			"nailgun_rotating_drum"
 
-	"fireRate"					"0.25"
+	"fireRate"					"0.1"
 	"spread"					"1"
 	"spread_mp"					"0"
 	"spreadSeek"				"5"
-	"drumSpeed"					".8"
+	"drumSpeed"					"0"
 	
 	"inv_weapon"				"weapon_nailgun"
 	"inv_start_ammo_nailgun"			"50"
@@ -123,8 +123,7 @@ entityDef weapon_nailgun
 
 	"mtr_icon"					"gfx/guis/hud/icons/gun_nailgun"
 
-	"def_projectile"			"projectile_nail"
-	"def_altprojectile"			"projectile_nail_seek"
+	"def_projectile"			"projectile_nail_seek"
 	"ammoType"					"ammo_nailgun"
 	"ammoRequired"				"1"
 	"clipSize"					"8"

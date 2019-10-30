@@ -1081,6 +1081,11 @@ idPlayer::idPlayer() {
 
 	alreadyDidTeamAnnouncerSound = false;
 
+	// initialize bools for powerups
+	isHasteActive = false;
+	isAmmoActive = false;
+	isShieldActive = false;
+
 	doInitWeapon			= false;
 	noclip					= false;
 	godmode					= false;
@@ -8750,7 +8755,11 @@ void idPlayer::AdjustSpeed( void ) {
 	} else if ( noclip ) {
 		speed = pm_noclipspeed.GetFloat();
 		bobFrac = 0.0f;
- 	} else if ( !physicsObj.OnLadder() && ( usercmd.buttons & BUTTON_RUN ) && ( usercmd.forwardmove || usercmd.rightmove ) && ( usercmd.upmove >= 0 ) ) {
+	} else if (isHasteActive) {
+		// increase speed for powerup
+		speed = pm_walkspeed.GetFloat() * 4;
+		bobFrac = 0.0f;
+	} else if (!physicsObj.OnLadder() && (usercmd.buttons & BUTTON_RUN) && (usercmd.forwardmove || usercmd.rightmove) && (usercmd.upmove >= 0)) {
 		bobFrac = 1.0f;
 		speed = pm_speed.GetFloat();
 	} else {
@@ -9282,7 +9291,7 @@ void idPlayer::LoadDeferredModel( void ) {
 }
 
 // how much time power up should be active for in seconds
-const int powerUpActiveTime = 5;
+const int powerUpActiveTime = 10;
 
 // methods for giving the player power ups
 bool idPlayer::givePowerJump() {
@@ -9296,8 +9305,11 @@ bool idPlayer::givePowerJump() {
 	// give flag "powerup" for graphic purposes
 	GivePowerUp(POWERUP_CTF_MARINEFLAG, powerUpActiveTime * 1000);
 
-	// set jump height to twice the normal
-	jumpHeight = pm_jumpheight.GetFloat() * 2;
+	// set jump height to quadruple the normal
+	jumpHeight = pm_jumpheight.GetFloat() * 4;
+
+	// disable fall damage
+	pfl.noFallingDamage = true;
 
 	gameLocal.Printf("Jump started\n");
 	return true;
@@ -9311,8 +9323,12 @@ bool idPlayer::givePowerHaste() {
 
 	powerUpTimer = gameLocal.time;
 
-	// use Quake's built in haste power up for this
-	GivePowerUp(POWERUP_HASTE, powerUpActiveTime * 1000);
+	// give flag "powerup" for graphic purposes
+	GivePowerUp(POWERUP_CTF_MARINEFLAG, powerUpActiveTime * 1000);
+
+	// set boolean
+	isHasteActive = true;
+	AdjustSpeed();
 	
 	gameLocal.Printf("Speed started\n");
 	return true;
@@ -9376,8 +9392,13 @@ void idPlayer::clearPowers() {
 
 	// reset jump
 	jumpHeight = pm_jumpheight.GetFloat();
+	pfl.noFallingDamage = false;
 
-	// reset speed and strength
+	// reset haste
+	isHasteActive = false;
+	AdjustSpeed();
+
+	// reset strength
 	ClearPowerUps();
 
 	// reset shield

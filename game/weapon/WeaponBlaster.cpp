@@ -14,6 +14,7 @@ public:
 	rvWeaponBlaster ( void );
 
 	virtual void		Spawn				( void );
+	virtual void Think();
 	void				Save				( idSaveGame *savefile ) const;
 	void				Restore				( idRestoreGame *savefile );
 	void				PreSave		( void );
@@ -32,6 +33,10 @@ private:
 	idVec2				chargeGlow;
 	bool				fireForced;
 	int					fireHeldTime;
+
+	// weapon upgrades
+	bool isUpgraded = false;
+	void upgrade();
 
 	stateResult_t		State_Raise				( const stateParms_t& parms );
 	stateResult_t		State_Lower				( const stateParms_t& parms );
@@ -53,6 +58,22 @@ rvWeaponBlaster::rvWeaponBlaster
 ================
 */
 rvWeaponBlaster::rvWeaponBlaster ( void ) {
+}
+
+void rvWeaponBlaster::upgrade() {
+	// increase fire rate
+	fireRate *= 2;
+}
+
+// think function to check for upgrades
+void rvWeaponBlaster::Think() {
+	// let weapon think first
+	rvWeapon::Think();
+
+	// check for upgrade
+	if (!isUpgraded && gameLocal.GetLocalPlayer()->isBlasterUpgraded) {
+		upgrade();
+	}
 }
 
 /*
@@ -115,10 +136,12 @@ bool rvWeaponBlaster::UpdateAttack ( void ) {
 	// If they have the charge mod and they have overcome the initial charge 
 	// delay then transition to the charge state.
 	if ( fireHeldTime != 0 ) {
+		/* don't go to charge state
 		if ( gameLocal.time - fireHeldTime > chargeDelay ) {
 			SetState ( "Charge", 4 );
 			return true;
 		}
+		*/
 
 		// If the fire button was let go but was pressed at one point then 
 		// release the shot.
