@@ -8,10 +8,7 @@ This mod adds several features inspired by the Half Life series, as well as a fe
 
 Main Instructions
 
- - Load test map using console command "map tools/mv2.map" (this map isn't required for the mod to work, but it makes testing easier)
- 
- - Weapons: give player all the weapons using command "give all"
- -- See "weapon specifics" for more details on the specifics of each weapon
+- Click "Start game" in main menu to load into map
 
 - Weapons upgrades: all weapons can be upgraded using command "upgradeWeapons"
 -- NOTE: weapons cannot be downgraded, so don't run this command until you are done with the default weapons
@@ -22,47 +19,48 @@ Main Instructions
 -- Walk over power up to gain its effect (only one can be picked up at a time)
 -- See "power up specifics" for more details on each power up
 
-- Creatures: spawn gunner using command "spawn monster_gunner"
+- Creatures: spawn Alien Grunt using command "spawn monster_gunner"
 
 Weapon specifics
 
 - Blaster
 -- Fire the weapon to see that it fires bullets instead of the original blaster particle. It also plays a bullet sound.
 -- Hold left click to see that the charged attack has been removed.
--- UPGRADE: the firing rate is considerably higher and you can fire much faster now.
+-- UPGRADE: Firing rate is considerably higher
 
 - Machine gun
--- TODO
+-- Alt-fire grenades by holding down right click before firing
+-- UPGRADE: Grenade fire rate is increased
 
 - Shotgun
--- TODO
+-- Works normally without upgrade
+-- UPGRADE: Spread is slightly higher and many more hitscans (50 instead of 10)
 
 - Hyperblaster
 -- Fire to see that the the original hyperblaster particles have been replaced with those of the rail gun.
 -- Fire at a creature to see that the damage is much lower than that of the default railgun.
--- UPGRADE:
+-- UPGRADE: Increased fire rate
 
 - Nailgun
 -- Fire to see that that ammo now regenerates (up to the default clip size of 8)
--- UPGRADE: fire to see that the fire rate is much higher, as is the ammo regeneration rate
+-- UPGRADE: Ammo regen rate, clip size, and fire rate are all increased
 
 - Railgun
 -- Hold right click to see the slowed-down zoom animation and no-overlay zoom, similar to the HL crossbow.
 -- Fire to see that the original hitscan has been replaced with a high-damage crossbow bolt projectile.
 -- Fire at a creature to see that the very high damage done by a single bolt.
--- UPGRADE: fire to see a higher reload rate
+-- UPGRADE: Reloads faster
 
 - Lightning
 -- Hold the fire button, aimed at the floor, starting aimed close to you and then moving further away, to see the weapon's much more restricted range.
--- UPGRADE: repeat above, but this time, the range will be higher and the ammo consumption will be much lower
+-- UPGRADE: Increased range and lower ammo consumption
 
 - Dark matter
 -- Spawn in an item using the command "spawn item_{name}", e.g. "item_health_large"
 -- Click on the item and move the mouse around to see that the item has been picked up
 -- Left click while holding item to throw it
 -- Right click while holding item to release it without throwing it
--- UPGRADE: the gun can now pick up monsters in addition to items. Spawn a monster in using "spawn monster_{name}", e.g. "monster_grunt". It can now be picked up and thrown like an item.
--- Power is increased with upgrade, so the item from before should go further when thrown.
+-- UPGRADE: Gun can now pick up monsters in addition to items and throwing power is increased
 
 Power up specifics
 
