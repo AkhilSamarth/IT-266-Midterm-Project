@@ -54,7 +54,8 @@ rvWeaponHyperblaster::rvWeaponHyperblaster ( void ) {
 }
 
 void rvWeaponHyperblaster::upgrade() {
-	gameLocal.Printf("TODO: Upgrade hyperblaster\n");
+	// increase fire rate
+	fireRate /= 2;
 }
 
 void rvWeaponHyperblaster::Think() {
