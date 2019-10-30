@@ -9419,7 +9419,14 @@ Called every tic for each player
 */
 void idPlayer::Think( void ) {
 
-	// if powerup active, check timer to see if 20 sec have passed
+	// clear objective if enough time has passed
+	if (objectiveTimer != 0 && (gameLocal.time - objectiveTimer > 5000)) {
+		HideObjective();
+
+		objectiveTimer = 0;
+	}
+
+	// if powerup active, check timer to see if powerupTime has passed
 	if (powerUpTimer && gameLocal.time - powerUpTimer > powerUpActiveTime * 1000) {
 		clearPowers();
 	}

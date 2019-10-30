@@ -54,7 +54,14 @@ void Cmd_Upgrade_Weapons(const idCmdArgs& args) {
 	gameLocal.GetLocalPlayer()->isMachinegunUpgraded = true;
 	gameLocal.GetLocalPlayer()->isShotgunUpgraded = true;
 	
+	// show objective
+	gameLocal.GetLocalPlayer()->GetObjectiveHud()->SetStateString("screenshot", "gfx/objectives/upgraded");
+	gameLocal.GetLocalPlayer()->GetObjectiveHud()->SetStateString("objective", "1");
+	gameLocal.GetLocalPlayer()->GetObjectiveHud()->SetStateString("objectivetext", "Your weapons have now been upgraded.");
+	gameLocal.GetLocalPlayer()->GetObjectiveHud()->SetStateString("objectivetitle", "Upgrade complete!");
+
 	gameLocal.GetLocalPlayer()->GiveObjective("Upgrade complete!", "Your weapons have now been upgraded.", "gfx/objectives/upgraded");
+	gameLocal.GetLocalPlayer()->objectiveTimer = gameLocal.time;
 }
 
 /*

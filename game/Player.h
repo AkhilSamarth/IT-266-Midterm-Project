@@ -310,6 +310,8 @@ public:
 	bool					isShieldActive;		// whether or not the shield powerup is active
 	bool					isHasteActive;		// whether or not the haste powerup is active
 
+	int objectiveTimer = 0;		// timer to clear objective
+
 	// booleans for weapon upgrade
 	bool isNailgunUpgraded = false;
 	bool isRailgunUpgraded = false;
